@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'search.dart';
 
 // Create a separate Drawer widget
 class Sidemenu extends StatelessWidget {
@@ -55,7 +56,12 @@ class Sidemenu extends StatelessWidget {
             ),
             title: Text('Search'),
             onTap: () {
-              // Add functionality here when item 2 is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Search()), // Replace YourDestinationPage with the page you want to navigate to
+              );
             },
           ),
           ListTile(

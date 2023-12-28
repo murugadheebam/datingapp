@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sidemenu.dart';
+import 'dashboard.dart';
+
 
 class Search extends StatefulWidget {
   @override
@@ -8,6 +10,11 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   String? selectedGender;
+  RangeValues height = RangeValues(25, 75); // Initial range values
+  RangeValues age = RangeValues(25, 75); // Initial range values
+  RangeValues weight = RangeValues(25, 75); // Initial range values
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +23,8 @@ class _SearchState extends State<Search> {
         title: Text('Search'),
       ),
       drawer: Sidemenu(),
-      body: Center(
+      body: SingleChildScrollView(
+      child:Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -24,7 +32,7 @@ class _SearchState extends State<Search> {
               'Find a Match',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Container(
               width: 200, // Set your desired width here
               child: Text(
@@ -34,7 +42,7 @@ class _SearchState extends State<Search> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 10),
             Card(
               margin: EdgeInsets.all(20),
               child: Column(
@@ -53,7 +61,6 @@ class _SearchState extends State<Search> {
                         ),
                         SizedBox(height: 10),
                         // Add more interest-related content here
-                        Divider(), // Add a divider for visual separation
                         Row(
                           children: [
                             Radio(
@@ -99,7 +106,7 @@ class _SearchState extends State<Search> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Interest in',
+                          'Height',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -107,51 +114,118 @@ class _SearchState extends State<Search> {
                         ),
                         SizedBox(height: 10),
                         // Add more interest-related content here
-                        Divider(), // Add a divider for visual separation
-                        Row(
-                          children: [
-                            Radio(
-                              value: 'men',
-                              groupValue: selectedGender,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedGender = value.toString();
-                                });
-                              },
-                            ),
-                            Text('Men'),
-                            SizedBox(width: 20),
-                            Radio(
-                              value: 'women',
-                              groupValue: selectedGender,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedGender = value.toString();
-                                });
-                              },
-                            ),
-                            Text('Women'),
-                            SizedBox(width: 20),
-                            Radio(
-                              value: 'other',
-                              groupValue: selectedGender,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedGender = value.toString();
-                                });
-                              },
-                            ),
-                            Text('Other'),
-                          ],
-                        ),
+RangeSlider(
+                values: height,
+                min: 0,
+                max: 100,
+                divisions: 10,
+                labels: RangeLabels(
+                  height.start.round().toString(),
+                  height.end.round().toString(),
+                ),
+                onChanged: (RangeValues newValues) {
+                  setState(() {
+                    height = newValues;
+                  });
+                },
+                activeColor: Color(0xFFff0068),
+                inactiveColor: Colors.grey,
+              ),
                       ],
                     ),
                   ),
+                   Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Weight',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                                               RangeSlider(
+                values: weight,
+                min: 0,
+                max: 100,
+                divisions: 10,
+                labels: RangeLabels(
+                  weight.start.round().toString(),
+                  weight.end.round().toString(),
+                ),
+                onChanged: (RangeValues newValues) {
+                  setState(() {
+                    weight = newValues;
+                  });
+                },
+                activeColor: Color(0xFFff0068),
+                inactiveColor: Colors.grey,
+              ),
+
+          
+                      ],
+                    ),
+                  ),
+                   Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Age',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                        RangeSlider(
+                values: age,
+                min: 0,
+                max: 100,
+                divisions: 10,
+                labels: RangeLabels(
+                  age.start.round().toString(),
+                  age.end.round().toString(),
+                ),
+                onChanged: (RangeValues newValues) {
+                  setState(() {
+                    age = newValues;
+                  });
+                },
+                activeColor: Color(0xFFff0068),
+                inactiveColor: Colors.grey,
+              ),
+   
+                      ],
+                    ),
+                  ),
+                              ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Dashboard()),
+                );
+              },
+              child: Text('SEARCH PEOPLE'),
+               style: ButtonStyle(
+    backgroundColor: MaterialStateProperty.all<Color>(Color(0xFFff0068)),
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white), // Text color
+ // Change background color here
+  ),
+            ),
+
+
                 ],
               ),
+
             ),
           ],
         ),
+      ),
       ),
     );
   }

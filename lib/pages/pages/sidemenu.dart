@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'search.dart';
+import 'profile.dart';
 
 // Create a separate Drawer widget
 class Sidemenu extends StatelessWidget {
@@ -75,7 +76,12 @@ class Sidemenu extends StatelessWidget {
             ),
             title: Text('My Profile'),
             onTap: () {
-              // Add functionality here when item 2 is tapped
+               Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Profile()), // Replace YourDestinationPage with the page you want to navigate to
+              );
             },
           ),
           ListTile(

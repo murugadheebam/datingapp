@@ -63,6 +63,7 @@ class _SearchState extends State<Search> {
                         // Add more interest-related content here
                         Row(
                           children: [
+                            
                             Radio(
                               value: 'men',
                               groupValue: selectedGender,
@@ -114,23 +115,31 @@ class _SearchState extends State<Search> {
                         ),
                         SizedBox(height: 10),
                         // Add more interest-related content here
-RangeSlider(
-                values: height,
-                min: 0,
-                max: 100,
-                divisions: 10,
-                labels: RangeLabels(
-                  height.start.round().toString(),
-                  height.end.round().toString(),
-                ),
-                onChanged: (RangeValues newValues) {
-                  setState(() {
-                    height = newValues;
-                  });
-                },
-                activeColor: Color(0xFFff0068),
-                inactiveColor: Colors.grey,
-              ),
+                   SliderTheme(
+  data: SliderThemeData(
+    trackHeight: 4, // Adjust this value to make the slider thinner or thicker
+    activeTrackColor: Color(0xFFff0068),
+    inactiveTrackColor: Colors.grey,
+    thumbColor: Colors.white, // Modify thumb color as needed
+    overlayColor: Colors.transparent, // Set overlay color to transparent if not needed
+    valueIndicatorColor: Colors.blue, // Adjust value indicator color if used
+  ),
+  child: RangeSlider(
+    values: height,
+    min: 0,
+    max: 100,
+    divisions: 10,
+    labels: RangeLabels(
+      height.start.round().toString(),
+      height.end.round().toString(),
+    ),
+    onChanged: (RangeValues newValues) {
+      setState(() {
+        height = newValues;
+      });
+    },
+  ),
+)
                       ],
                     ),
                   ),
@@ -147,23 +156,31 @@ RangeSlider(
                           ),
                         ),
                         SizedBox(height: 10),
-                                               RangeSlider(
-                values: weight,
-                min: 0,
-                max: 100,
-                divisions: 10,
-                labels: RangeLabels(
-                  weight.start.round().toString(),
-                  weight.end.round().toString(),
-                ),
-                onChanged: (RangeValues newValues) {
-                  setState(() {
-                    weight = newValues;
-                  });
-                },
-                activeColor: Color(0xFFff0068),
-                inactiveColor: Colors.grey,
-              ),
+                           SliderTheme(
+  data: SliderThemeData(
+    trackHeight: 4, // Adjust this value to make the slider thinner or thicker
+    activeTrackColor: Color(0xFFff0068),
+    inactiveTrackColor: Colors.grey,
+    thumbColor: Colors.white, // Modify thumb color as needed
+    overlayColor: Colors.transparent, // Set overlay color to transparent if not needed
+    valueIndicatorColor: Colors.blue, // Adjust value indicator color if used
+  ),
+  child: RangeSlider(
+    values: weight,
+    min: 0,
+    max: 100,
+    divisions: 10,
+    labels: RangeLabels(
+      weight.start.round().toString(),
+      weight.end.round().toString(),
+    ),
+    onChanged: (RangeValues newValues) {
+      setState(() {
+        weight = newValues;
+      });
+    },
+  ),
+)
 
           
                       ],
@@ -182,23 +199,32 @@ RangeSlider(
                           ),
                         ),
                         SizedBox(height: 10),
-                        RangeSlider(
-                values: age,
-                min: 0,
-                max: 100,
-                divisions: 10,
-                labels: RangeLabels(
-                  age.start.round().toString(),
-                  age.end.round().toString(),
-                ),
-                onChanged: (RangeValues newValues) {
-                  setState(() {
-                    age = newValues;
-                  });
-                },
-                activeColor: Color(0xFFff0068),
-                inactiveColor: Colors.grey,
-              ),
+                   SliderTheme(
+  data: SliderThemeData(
+    trackHeight: 4, // Adjust this value to make the slider thinner or thicker
+    activeTrackColor: Color(0xFFff0068),
+    inactiveTrackColor: Colors.grey,
+    thumbColor: Colors.white, // Modify thumb color as needed
+    overlayColor: Colors.transparent, // Set overlay color to transparent if not needed
+    valueIndicatorColor: Colors.blue, // Adjust value indicator color if used
+  ),
+  child: RangeSlider(
+    values: age,
+    min: 0,
+    max: 100,
+    divisions: 10,
+    labels: RangeLabels(
+      age.start.round().toString(),
+      age.end.round().toString(),
+    ),
+    onChanged: (RangeValues newValues) {
+      setState(() {
+        age = newValues;
+      });
+    },
+  ),
+)
+
    
                       ],
                     ),

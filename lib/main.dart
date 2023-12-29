@@ -1,3 +1,4 @@
+import 'package:datingapp/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'pages/login.dart';
 
@@ -9,7 +10,7 @@ class LoginApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Login(),
+      home: SplashScreen(),
     );
   }
 }

@@ -27,7 +27,26 @@ class ProfileState extends State<Profile> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('Profile Details'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(right: 40),
+            child: Text(
+              'Profile Details',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black87),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: Colors.black), // Set the back arrow color to black
+            onPressed: () {},
+          ),
+          // backgroundColor: Color(0xFF6a9739),
         ),
         drawer: Sidemenu(),
         body: Column(

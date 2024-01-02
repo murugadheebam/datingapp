@@ -10,11 +10,10 @@ import 'package:flutter/material.dart';
 // import 'pages/dashboard.dart';
 
 class Login extends StatelessWidget {
-  Login({ super.key });
+  Login({super.key});
 
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +21,25 @@ class Login extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title:  Container(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Container(
           width: double.infinity,
           padding: EdgeInsets.only(right: 40),
           child: Text(
             'Login',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25, color: Colors.black87),
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+                color: Colors.black87),
             textAlign: TextAlign.center,
           ),
         ),
-        leading: IconButton(icon: Icon(Icons.arrow_back), onPressed: () {},),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back,
+              color: Colors.black), // Set the back arrow color to black
+          onPressed: () {},
+        ),
         // backgroundColor: Color(0xFF6a9739),
       ),
       body: SingleChildScrollView(
@@ -65,11 +73,20 @@ class Login extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20)),
                 child: Column(
                   children: [
-                    MyInput(controller: usernameController, hintText: "Mobile Number", obscureText: false, prefixicon: Icon(Icons.phone_android),),
+                    MyInput(
+                      controller: usernameController,
+                      hintText: "Mobile Number",
+                      obscureText: false,
+                      prefixicon: Icon(Icons.phone_android),
+                    ),
                     const SizedBox(
                       height: 20, // Add more height here for additional space
                     ),
-                    MyInput(controller: passwordController, hintText: "Mail ID", obscureText: false, prefixicon: Icon(Icons.mail)),
+                    MyInput(
+                        controller: passwordController,
+                        hintText: "Mail ID",
+                        obscureText: false,
+                        prefixicon: Icon(Icons.mail)),
                     const SizedBox(
                       height: 20, // Add more height here for additional space
                     ),

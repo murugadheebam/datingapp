@@ -20,6 +20,8 @@ class _RegisterState extends State<Register> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         title: Container(
           width: double.infinity,
           padding: EdgeInsets.only(right: 40),
@@ -27,13 +29,14 @@ class _RegisterState extends State<Register> {
             'Sign Up',
             style: TextStyle(
                 fontWeight: FontWeight.w600,
-                fontSize: 25,
+                fontSize: 20,
                 color: Colors.black87),
             textAlign: TextAlign.center,
           ),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back,
+              color: Colors.black), // Set the back arrow color to black
           onPressed: () {},
         ),
         // backgroundColor: Color(0xFF6a9739),
@@ -64,7 +67,8 @@ class _RegisterState extends State<Register> {
               Container(
                 padding: const EdgeInsets.all(30.0),
                 decoration: BoxDecoration(
-                    color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
                 child: Column(
                   children: [
                     MyInput(
@@ -108,8 +112,8 @@ class _RegisterState extends State<Register> {
                       },
                       child: const Text(
                         'SIGN UP',
-                        style:
-                            TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.w900, fontSize: 16),
                       ),
                     ),
                   ],
@@ -125,8 +129,10 @@ class _RegisterState extends State<Register> {
                     MaterialPageRoute(builder: (context) => Login()),
                   );
                 },
-                child: Text('Already have an account? Log In', 
-                  style: TextStyle(color: Colors.black54, fontSize: 16),),
+                child: Text(
+                  'Already have an account? Log In',
+                  style: TextStyle(color: Colors.black54, fontSize: 16),
+                ),
               )
             ],
           ),

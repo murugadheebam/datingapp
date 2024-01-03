@@ -94,119 +94,129 @@ class CreateeventState extends State<Createevent> {
                   height: 200,
                   fit: BoxFit.contain,
                 ),
-                Text(
-                  'Place', // Your label text here
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(
+                            'Place', // Your label text here
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          MyInput(
+                              controller: nameController,
+                              hintText: "Place",
+                              obscureText: false,
+                              prefixicon: Icon(Icons.person_sharp)),
+                          Text(
+                            'Date', // Your label text here
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          TextField(
+                            controller: dateController,
+                            onTap: () => _selectDate(context),
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                onPressed: () => _selectDate(context),
+                                icon: Icon(Icons.calendar_today),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade200,
+                                  )),
+                            ),
+                            readOnly: true, // To prevent manual text input
+                          ),
+                          Text(
+                            'Time', // Your label text here
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          TextField(
+                            controller: _timeController,
+                            onTap: () => _selectTime(context),
+                            decoration: InputDecoration(
+                              suffixIcon: IconButton(
+                                onPressed: () => _selectTime(context),
+                                icon: Icon(Icons.access_time),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade200,
+                                  )),
+                            ),
+                            readOnly: true,
+                          ),
+                          Text(
+                            'Message', // Your label text here
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          TextField(
+                            controller: _textAreaController,
+                            maxLines: null, // Allows for multiline input
+                            decoration: InputDecoration(
+                              hintText: 'Enter your text here',
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100),
+                                  borderSide: BorderSide(
+                                    color: Colors.grey.shade200,
+                                  )),
+                            ),
+                          ),
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all<Size?>(
+                                  const Size(250.0, 55.0)),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color.fromRGBO(246, 46, 108, 1)),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => Home()),
+                              );
+                            },
+                            child: const Text(
+                              'SCHEDULE EVENT',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 16),
+                            ),
+                          ),
+                        ]),
                   ),
                 ),
+
                 // SizedBox(
                 //   height: 8,
                 // ),
-                MyInput(
-                    controller: nameController,
-                    hintText: "Place",
-                    obscureText: false,
-                    prefixicon: Icon(Icons.person_sharp)),
-                Text(
-                  'Date', // Your label text here
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
+
                 // SizedBox(
                 //   height: 8,
                 // ),
-                TextField(
-                  controller: dateController,
-                  onTap: () => _selectDate(context),
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () => _selectDate(context),
-                      icon: Icon(Icons.calendar_today),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade200,
-                        )),
-                  ),
-                  readOnly: true, // To prevent manual text input
-                ),
-                Text(
-                  'Time', // Your label text here
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                // SizedBox(
-                //   height: 8,
-                // ),
-                TextField(
-                  controller: _timeController,
-                  onTap: () => _selectTime(context),
-                  decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      onPressed: () => _selectTime(context),
-                      icon: Icon(Icons.access_time),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade200,
-                        )),
-                  ),
-                  readOnly: true,
-                ),
-                Text(
-                  'Message', // Your label text here
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                // SizedBox(
-                //   height: 8,
-                // ),
-                TextField(
-                  controller: _textAreaController,
-                  maxLines: null, // Allows for multiline input
-                  decoration: InputDecoration(
-                    hintText: 'Enter your text here',
-                    enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(100),
-                        borderSide: BorderSide(
-                          color: Colors.grey.shade200,
-                        )),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all<Size?>(
-                        const Size(250.0, 55.0)),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                        const Color.fromRGBO(246, 46, 108, 1)),
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(Colors.white),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Home()),
-                    );
-                  },
-                  child: const Text(
-                    'SCHEDULE EVENT',
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
-                  ),
-                ),
               ])),
     );
   }

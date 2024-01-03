@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'search.dart';
 import 'profile.dart';
+import 'settings.dart';
+import 'majorissues.dart';
 
 // Create a separate Drawer widget
 class Sidemenu extends StatelessWidget {
@@ -76,7 +78,7 @@ class Sidemenu extends StatelessWidget {
             ),
             title: Text('My Profile'),
             onTap: () {
-               Navigator.push(
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
@@ -95,7 +97,10 @@ class Sidemenu extends StatelessWidget {
             ),
             title: Text('Settings'),
             onTap: () {
-              // Add functionality here when item 2 is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Settings()),
+              );
             },
           ),
           ListTile(
@@ -111,6 +116,10 @@ class Sidemenu extends StatelessWidget {
             title: Text('Raise Major Issues'),
             onTap: () {
               // Add functionality here when item 2 is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Majorissues()),
+              );
             },
           ),
           ListTile(

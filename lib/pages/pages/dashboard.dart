@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'sidemenu.dart';
 import 'createevent.dart';
+import 'starrating.dart';
 
 class Dashboard extends StatelessWidget {
   @override
@@ -22,6 +23,20 @@ class Dashboard extends StatelessWidget {
             },
             child: const Text(
               'Create Event',
+              style: TextStyle(color: Colors.black54, fontSize: 16),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Starrating()), // Replace SignUp() with your signup page
+              );
+            },
+            child: const Text(
+              'rating',
               style: TextStyle(color: Colors.black54, fontSize: 16),
             ),
           )

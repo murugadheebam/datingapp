@@ -59,6 +59,8 @@ class _NotificationpageState extends State<Notificationpage> {
               mainAxisAlignment:
                   MainAxisAlignment.start, // Align buttons to the left
               children: [
+                SizedBox(width: 10), // Space between buttons
+
                 ElevatedButton(
                   onPressed: () {
                     setState(() {
@@ -125,20 +127,33 @@ class _NotificationpageState extends State<Notificationpage> {
   }
 
   Widget buildNotificationTile(NotificationItem item) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: AssetImage('assets/user_avatar.png'),
-      ),
-      title: Text(
-        '${item.senderName} ${item.message}',
-        style: TextStyle(
-          fontWeight: !item.isRead ? FontWeight.bold : FontWeight.normal,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+          vertical: 8.0), // Adjust the vertical space between tiles
+      child: Container(
+        decoration: BoxDecoration(
+          color: item.isRead
+              ? Colors.white
+              : Colors.grey[200], // Background color for unread notifications
+          borderRadius:
+              BorderRadius.circular(12.0), // Border radius for the container
+        ),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundImage: AssetImage('assets/profile3.png'),
+          ),
+          title: Text(
+            '${item.senderName} ${item.message}',
+            style: TextStyle(
+              fontWeight: !item.isRead ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          subtitle: Text(item.date),
+          trailing: item.isRead
+              ? null
+              : Icon(Icons.circle, color: Colors.red, size: 12.0),
         ),
       ),
-      subtitle: Text(item.date),
-      trailing: item.isRead
-          ? null
-          : Icon(Icons.circle, color: Colors.red, size: 12.0),
     );
   }
 }

@@ -8,12 +8,61 @@ import 'package:flutter/material.dart';
 // import 'home.dart';
 // import 'register.dart';
 // import 'pages/dashboard.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final userProvider = StateProvider<Map<String, dynamic>?>((ref) => null);
 
 class Login extends StatelessWidget {
   Login({super.key});
 
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  Future<void> loginUser(BuildContext context, WidgetRef ref) async {
+    print("check");
+    final String email = emailController.text;
+    final String password = passwordController.text;
+    print(email);
+    print(password);
+
+    final Uri url = Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/login');
+    try {
+      final response = await http.post(
+        url,
+         headers: {
+      'Content-Type': 'application/json',
+      // Add any other required headers here
+    },
+        body: json.encode({
+          'email': email,
+          'password': password,
+          'device':'289734'
+        }),
+       
+      );
+      print(response);
+      if (response.statusCode == 200) {
+        print(response.body);
+         final userData = json.decode(response.body);
+          ref.read(userProvider.notifier).state = userData;
+
+        Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Dashboard()),
+      );
+    
+      }
+
+
+    } catch (error) {
+      // Handle any exceptions that might occur during the API call
+      print("cgvdsfd");
+      print('Error: $error');
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +123,8 @@ class Login extends StatelessWidget {
                 child: Column(
                   children: [
                     MyInput(
-                      controller: usernameController,
-                      hintText: "Mobile Number",
+                      controller: emailController,
+                      hintText: "Email",
                       obscureText: false,
                       prefixicon: Icon(Icons.phone_android),
                     ),
@@ -84,13 +133,16 @@ class Login extends StatelessWidget {
                     ),
                     MyInput(
                         controller: passwordController,
-                        hintText: "Mail ID",
-                        obscureText: false,
+                        hintText: "Password",
+                        obscureText: true,
                         prefixicon: Icon(Icons.mail)),
                     const SizedBox(
                       height: 20, // Add more height here for additional space
                     ),
-                    ElevatedButton(
+                       Consumer(
+      builder: (context, ref, child) {
+                    return ElevatedButton(
+                      
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all<Size?>(
                             const Size(250.0, 55.0)),
@@ -100,17 +152,20 @@ class Login extends StatelessWidget {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => Dashboard()),
-                        );
+                         loginUser(context,ref); 
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => Dashboard()),
+                        // );
                       },
                       child: const Text(
                         'LOGIN',
                         style: TextStyle(
                             fontWeight: FontWeight.w900, fontSize: 16),
                       ),
-                    ),
+                    );
+      },
+                       )
                   ],
                 ),
               ),

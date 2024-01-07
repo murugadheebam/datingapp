@@ -4,7 +4,7 @@ import 'package:datingapp/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'login.dart';
+import 'pages/otp.dart';
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
 
@@ -51,7 +51,7 @@ class _RegisterState extends State<Register> {
 
         Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => OTPScreen()),
       );
     
       }
@@ -163,11 +163,11 @@ class _RegisterState extends State<Register> {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => Home()),
-                        // );
-                        RegisterUser(context); 
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => OTPScreen()),
+                        );
+                        // RegisterUser(context); 
 
                       },
                       child: const Text(

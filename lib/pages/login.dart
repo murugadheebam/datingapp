@@ -5,14 +5,15 @@ import 'package:datingapp/pages/pages/dashboard.dart';
 import 'package:datingapp/pages/register.dart';
 import 'package:datingapp/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
+import 'pages/otp.dart';
 // import 'home.dart';
 // import 'register.dart';
 // import 'pages/dashboard.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'pages/provider.dart';
 
-final userProvider = StateProvider<Map<String, dynamic>?>((ref) => null);
 
 class Login extends StatelessWidget {
   Login({super.key});
@@ -50,7 +51,7 @@ class Login extends StatelessWidget {
 
         Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Dashboard()),
+        MaterialPageRoute(builder: (context) => OTPScreen()),
       );
     
       }
@@ -155,7 +156,7 @@ class Login extends StatelessWidget {
                          loginUser(context,ref); 
                         // Navigator.push(
                         //   context,
-                        //   MaterialPageRoute(builder: (context) => Dashboard()),
+                        //   MaterialPageRoute(builder: (context) => OTPScreen()),
                         // );
                       },
                       child: const Text(

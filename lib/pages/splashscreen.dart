@@ -18,8 +18,7 @@ class _SplashScreenState extends State<SplashScreen>
         overlays: SystemUiOverlay.values);
 
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Login()));
     });
   }
 
@@ -30,21 +29,21 @@ class _SplashScreenState extends State<SplashScreen>
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration:  BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.pink.shade400, Color.fromRGBO(246, 46, 108, 1)],
             begin: FractionalOffset.bottomCenter,
             end: FractionalOffset.topRight,
-            // tileMode: TileMode.repeated
           ),
         ),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           Image.asset(
-                'assets/logo-light.png',
+            'assets/logo-light.png',
             height: 100,
           ),
         ]),

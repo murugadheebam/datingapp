@@ -2,7 +2,7 @@ import 'package:datingapp/pages/components/my_input.dart';
 import 'package:datingapp/pages/home.dart';
 import 'package:datingapp/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'notifications.dart' as notify;
+import 'package:datingapp/pages/pages/notifications.dart'; // Replace with your actual package name
 
 class Majorissues extends StatefulWidget {
   const Majorissues({Key? key}) : super(key: key);
@@ -44,7 +44,7 @@ class MajorissuesState extends State<Majorissues> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => notify.Notification()),
+                MaterialPageRoute(builder: (context) => Notificationpage()),
               );
             },
           ),

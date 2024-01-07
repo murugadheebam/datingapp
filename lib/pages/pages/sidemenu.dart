@@ -1,3 +1,4 @@
+import 'package:datingapp/pages/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'search.dart';
 import 'profile.dart';
@@ -18,7 +19,7 @@ class Sidemenu extends StatelessWidget {
               children: <Widget>[
                 CircleAvatar(
                   radius: 40,
-                  backgroundImage: AssetImage('assets/user.png'),
+                  backgroundImage: AssetImage('assets/profile.png'),
                   backgroundColor: Colors.transparent,
                   // Placeholder image for demonstration (replace with your image)
                 ),
@@ -43,7 +44,7 @@ class Sidemenu extends StatelessWidget {
               ),
               child: Image.asset('assets/dashboard.png', width: 24, height: 24),
             ),
-            title: Text('Dashboard'),
+            title: SidemenuItem(menuText: "Dashboard"),
             onTap: () {
               // Add functionality here when item 1 is tapped
             },
@@ -57,7 +58,7 @@ class Sidemenu extends StatelessWidget {
               ),
               child: Image.asset('assets/search.png', width: 24, height: 24),
             ),
-            title: Text('Search'),
+            title: SidemenuItem(menuText: "Search"),
             onTap: () {
               Navigator.push(
                 context,
@@ -76,7 +77,7 @@ class Sidemenu extends StatelessWidget {
               ),
               child: Image.asset('assets/user.png', width: 24, height: 24),
             ),
-            title: Text('My Profile'),
+            title: SidemenuItem(menuText: "My Profile"),
             onTap: () {
               Navigator.push(
                 context,
@@ -95,7 +96,7 @@ class Sidemenu extends StatelessWidget {
               ),
               child: Image.asset('assets/settings.png', width: 24, height: 24),
             ),
-            title: Text('Settings'),
+            title: SidemenuItem(menuText: "Settings"),
             onTap: () {
               Navigator.push(
                 context,
@@ -113,7 +114,7 @@ class Sidemenu extends StatelessWidget {
               child:
                   Image.asset('assets/exclamation.png', width: 24, height: 24),
             ),
-            title: Text('Raise Major Issues'),
+            title: SidemenuItem(menuText: 'Raise Major Issues'),
             onTap: () {
               // Add functionality here when item 2 is tapped
               Navigator.push(
@@ -131,7 +132,7 @@ class Sidemenu extends StatelessWidget {
               ),
               child: Image.asset('assets/review.png', width: 24, height: 24),
             ),
-            title: Text('App Feedback'),
+            title: SidemenuItem(menuText: "App Feedback"),
             onTap: () {
               // Add functionality here when item 2 is tapped
             },
@@ -140,5 +141,18 @@ class Sidemenu extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class SidemenuItem extends StatelessWidget {
+  final menuText;
+  const SidemenuItem({
+    super.key,
+    required this.menuText
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(menuText, style: TextStyle(fontWeight: FontWeight.w600));
   }
 }

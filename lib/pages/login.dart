@@ -48,6 +48,10 @@ class Login extends StatelessWidget {
         print(response.body);
          final userData = json.decode(response.body);
           ref.read(userProvider.notifier).state = userData;
+          ref.read(isLoggedInProvider.notifier).state = true;
+          final prefs = ref.read(sharedPreferencesProvider);
+          prefs.setString('userData', json.encode(userData));
+          prefs.setBool('isLoggedIn', true);
 
         Navigator.push(
         context,

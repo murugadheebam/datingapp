@@ -23,19 +23,23 @@ class _OTPScreenState extends State<OTPScreen> {
     Future<void> Checkotp(BuildContext context,WidgetRef ref) async {
         String emailOtp = emailotpcontrollers.map((controller) => controller.text).join();
   String mobileOtp = mobileotpcontrollers.map((controller) => controller.text).join();
+Map<String, dynamic>? data;
+          final userData = ref.watch(userProvider);
 
+ if (userData != null) {
+    // Convert the userData map to a JSON string
+    String jsonString = jsonEncode(userData);
+    
+    // Decode the JSON string to a Map
+    data = jsonDecode(jsonString);
+    
+    // Now 'data' contains the decoded data from the 'userData' map
+  }
 
       final Uri url = Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/otp/verify');
     try {
-          final userData = ref.watch(userProvider);
-      String id = '';
 
-if (userData != null) {
-  String jsonString = jsonEncode(userData);
-  Map<String, dynamic> data = jsonDecode(jsonString);
 
-  String id1 = data['id'];
-          print('ID: $id');
 
                 final response = await http.post(
         url,
@@ -46,7 +50,7 @@ if (userData != null) {
         body: json.encode({
           'emailOTP':emailOtp,
           'phoneOTP': mobileOtp,
-          'id':id,
+          'id':data?['id'],
           'device':'123'
           
          
@@ -65,12 +69,7 @@ if (userData != null) {
       }
 
 
-} else {
-  // Handle the case when userData is null
-  print("else");
-    String id ='';
 
-}
 
 
 

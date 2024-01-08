@@ -1,15 +1,19 @@
-import 'package:datingapp/pages/pages/dashboard.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'search.dart';
 import 'profile.dart';
 import 'settings.dart';
 import 'majorissues.dart';
 
-// Create a separate Drawer widget
-class Sidemenu extends StatelessWidget {
+final userNameProvider = StateProvider<String?>((ref) => null);
+
+class Sidemenu extends ConsumerWidget {
+  const Sidemenu({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    return Drawer(
+  Widget build(BuildContext context, WidgetRef ref) {
+
+  return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[

@@ -12,6 +12,13 @@ class LoginApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.pink.shade400,
+          primary: Colors.pink
+        )
+      ),
+      debugShowCheckedModeBanner: false,
       home: SplashScreen(),
     );
   }

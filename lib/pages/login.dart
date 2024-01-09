@@ -97,8 +97,8 @@ class Login extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
               gradient: LinearGradient(begin: Alignment.topRight, colors: [
-            const Color(0xfafafb),
-            const Color(0xe6c4d0).withOpacity(0.8)
+            const Color(0xFAFAFB),
+            const Color(0xE6C4D0).withOpacity(0.8)
           ])),
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +107,7 @@ class Login extends StatelessWidget {
                 height: 50,
               ),
               Image.asset(
-                'assets/login.png',
+                'assets/login_1.png',
                 width: 300,
                 height: 200,
                 fit: BoxFit.contain,

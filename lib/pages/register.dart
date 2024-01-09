@@ -106,7 +106,7 @@ class _RegisterState extends State<Register> {
                 height: 30,
               ),
               Image.asset(
-                'assets/login.png',
+                'assets/signup.png',
                 width: 300,
                 height: 200,
                 fit: BoxFit.contain,

@@ -83,13 +83,14 @@ class _RegisterState extends State<Register> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back,
               color: Colors.black), // Set the back arrow color to black
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         // backgroundColor: Color(0xFF6a9739),
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: size.height,
           padding: const EdgeInsets.all(16.0),
           decoration: BoxDecoration(
               gradient: LinearGradient(begin: Alignment.topRight, colors: [
@@ -98,9 +99,6 @@ class _RegisterState extends State<Register> {
           ])),
           child: Column(
             children: <Widget>[
-              const SizedBox(
-                height: 30,
-              ),
               Image.asset(
                 'assets/signup.png',
                 width: 300,
@@ -173,9 +171,6 @@ class _RegisterState extends State<Register> {
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 20, // Add more height here for additional space
               ),
               TextButton(
                 onPressed: () {

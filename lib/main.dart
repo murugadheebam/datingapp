@@ -29,7 +29,7 @@ class MyApp extends ConsumerWidget {
       );
     } else {
       return MaterialApp(
-        home: Dashboard(),
+        home: Login(),
       );
     }
   }

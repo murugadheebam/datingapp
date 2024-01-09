@@ -19,19 +19,6 @@ void main() async {
 
 class MyApp extends ConsumerWidget {
   @override
-<<<<<<< HEAD
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.pink.shade400,
-          primary: Colors.pink
-        )
-      ),
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-    );
-=======
   Widget build(BuildContext context, WidgetRef ref) {
     final loggedIn = ref.watch(isLoggedInProvider);
     print('loggedIn: $loggedIn');
@@ -45,6 +32,5 @@ class MyApp extends ConsumerWidget {
         home: Dashboard(),
       );
     }
->>>>>>> e47129d9621b0e5b0a17f8e450e32b15679678b5
   }
 }

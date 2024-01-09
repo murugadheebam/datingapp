@@ -213,16 +213,238 @@ class ProfileState extends State<Profile> {
                       isExpanded
                           ? Column(
                               children: [
-                                ListTile(
-                                  leading: Icon(Icons.email),
-                                  title: Text('Email'),
-                                  subtitle: Text('nira.manisha@example.com'),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Lorem ipsum dolor sit amet. Sit pariatur accusamus est perferendis porro in cumque cumque ex labore dolorem. A assumenda excepturi sit doloremque amet sed aspernatur odit. Et totam ducimus eum accusantium voluptas est tempora itaque ad autem eius et enim delectus',
+                                        // You can apply styling here if needed
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                ListTile(
-                                  leading: Icon(Icons.phone),
-                                  title: Text('Phone'),
-                                  subtitle: Text('+1234567890'),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
                                 ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      'Interest',
+                                      // You can apply styling here if needed
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      flex:
+                                          3, // Flex factor for the first column
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black, // Border color
+                                            width: 1.0, // Border width
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // Border radius
+                                        ), // First column background color
+                                        child: Center(
+                                          child: Text(
+                                            'Football',
+                                            style: TextStyle(
+                                                color: Color(0xFFFF579B)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex:
+                                          3, // Flex factor for the second column
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black, // Border color
+                                            width: 1.0, // Border width
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // Border radius
+                                        ), // Second column background color
+                                        child: Center(
+                                          child: Text(
+                                            'Travel',
+                                            style: TextStyle(
+                                                color: Color(0xFFFF579B)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex:
+                                          3, // Flex factor for the third column
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black, // Border color
+                                            width: 1.0, // Border width
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                              10.0), // Border radius
+                                        ), // Third column background color
+                                        child: Center(
+                                          child: Text(
+                                            'Music',
+                                            style: TextStyle(
+                                                color: Color(0xFFFF579B)),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Divider(
+                                  // Divider between rows
+                                  color: Color.fromARGB(
+                                      255, 221, 220, 220), // Divider line color
+                                  thickness: 0.5, // Divider line thickness
+                                  height: 0, // Adjust the space between rows
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Age',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '32 Years',
+                                      style:
+                                          TextStyle(color: Color(0xFFFF579B)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Divider(
+                                  // Divider between rows
+                                  color: Color.fromARGB(
+                                      255, 221, 220, 220), // Divider line color
+                                  thickness: 0.5, // Divider line thickness
+                                  height: 0, // Adjust the space between rows
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Occupation',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Doctor',
+                                      style:
+                                          TextStyle(color: Color(0xFFFF579B)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Divider(
+                                  // Divider between rows
+                                  color: Color.fromARGB(
+                                      255, 221, 220, 220), // Divider line color
+                                  thickness: 0.5, // Divider line thickness
+                                  height: 0, // Adjust the space between rows
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Height',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '5.7',
+                                      style:
+                                          TextStyle(color: Color(0xFFFF579B)),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Divider(
+                                  // Divider between rows
+                                  color: Color.fromARGB(
+                                      255, 221, 220, 220), // Divider line color
+                                  thickness: 0.5, // Divider line thickness
+                                  height: 0, // Adjust the space between rows
+                                ),
+                                SizedBox(
+                                  height:
+                                      10, // Replace with your desired height value
+                                  // Replace YourWidget() with the widget you want to size
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'Weight',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      '62kg',
+                                      style:
+                                          TextStyle(color: Color(0xFFFF579B)),
+                                    ),
+                                  ],
+                                ),
+
                                 // Add more ListTiles or other widgets as needed
                               ],
                             )

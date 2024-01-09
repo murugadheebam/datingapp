@@ -14,7 +14,6 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'pages/provider.dart';
 
-
 class Login extends StatelessWidget {
   Login({super.key});
 
@@ -28,45 +27,36 @@ class Login extends StatelessWidget {
     print(email);
     print(password);
 
-    final Uri url = Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/login');
+    final Uri url =
+        Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/login');
     try {
       final response = await http.post(
         url,
-         headers: {
-      'Content-Type': 'application/json',
-      // Add any other required headers here
-    },
-        body: json.encode({
-          'email': email,
-          'password': password,
-          'device':'289734'
-        }),
-       
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other required headers here
+        },
+        body: json
+            .encode({'email': email, 'password': password, 'device': '289734'}),
       );
       print(response);
       if (response.statusCode == 200) {
         print(response.body);
-         final userData = json.decode(response.body);
-          ref.read(userProvider.notifier).state = userData;
-          ref.read(isLoggedInProvider.notifier).state = true;
-          final prefs = ref.read(sharedPreferencesProvider);
-          prefs.setString('userData', json.encode(userData));
-          prefs.setBool('isLoggedIn', true);
+        final userData = json.decode(response.body);
+        ref.read(userProvider.notifier).state = userData;
+        final prefs = ref.read(sharedPreferencesProvider);
+        prefs.setString('userData', json.encode(userData));
 
         Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => OTPScreen()),
-      );
-    
+          context,
+          MaterialPageRoute(builder: (context) => OTPScreen()),
+        );
       }
-
-
     } catch (error) {
       // Handle any exceptions that might occur during the API call
       print("cgvdsfd");
       print('Error: $error');
     }
-
   }
 
   @override
@@ -144,33 +134,32 @@ class Login extends StatelessWidget {
                     const SizedBox(
                       height: 20, // Add more height here for additional space
                     ),
-                       Consumer(
-      builder: (context, ref, child) {
-                    return ElevatedButton(
-                      
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all<Size?>(
-                            const Size(250.0, 55.0)),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromRGBO(246, 46, 108, 1)),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      onPressed: () {
-                         loginUser(context,ref); 
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => OTPScreen()),
-                        // );
+                    Consumer(
+                      builder: (context, ref, child) {
+                        return ElevatedButton(
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all<Size?>(
+                                const Size(250.0, 55.0)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromRGBO(246, 46, 108, 1)),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                          ),
+                          onPressed: () {
+                            loginUser(context, ref);
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => OTPScreen()),
+                            // );
+                          },
+                          child: const Text(
+                            'LOGIN',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w900, fontSize: 16),
+                          ),
+                        );
                       },
-                      child: const Text(
-                        'LOGIN',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900, fontSize: 16),
-                      ),
-                    );
-      },
-                       )
+                    )
                   ],
                 ),
               ),

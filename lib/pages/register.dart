@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'pages/otp.dart';
+
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
 
@@ -19,50 +20,45 @@ class _RegisterState extends State<Register> {
 
   final passwordController = TextEditingController();
 
-    Future<void> RegisterUser(BuildContext context) async {
+  Future<void> RegisterUser(BuildContext context) async {
     print("check");
     final String name = nameController.text;
     final String mobile_no = mobileController.text;
-        final String email = mailidController.text;
+    final String email = mailidController.text;
 
-        final String password = passwordController.text;
+    final String password = passwordController.text;
 
-
-    final Uri url = Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/register');
+    final Uri url = Uri.parse(
+        'https://commitment.loveyourselfblog.in/api/v1/auth/register');
     try {
       final response = await http.post(
         url,
-         headers: {
-      'Content-Type': 'application/json',
-      // Add any other required headers here
-    },
+        headers: {
+          'Content-Type': 'application/json',
+          // Add any other required headers here
+        },
         body: json.encode({
-          'name':name,
+          'name': name,
           'email': email,
-          'phone':'+91'+mobile_no,
-          'password':password,
-          'retype_password':password
+          'phone': '+91' + mobile_no,
+          'password': password,
+          'retype_password': password
         }),
-        
       );
       print(response);
       if (response.statusCode == 200) {
         print(response.body);
 
         Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => OTPScreen()),
-      );
-    
+          context,
+          MaterialPageRoute(builder: (context) => OTPScreen()),
+        );
       }
-
-
     } catch (error) {
       // Handle any exceptions that might occur during the API call
       print("cgvdsfd");
       print('Error: $error');
     }
-
   }
 
   @override
@@ -145,12 +141,12 @@ class _RegisterState extends State<Register> {
                     SizedBox(
                       height: 20, // Add more height here for additional space
                     ),
-                               MyInput(
+                    MyInput(
                         controller: passwordController,
                         hintText: "Password",
                         obscureText: true,
                         prefixicon: Icon(Icons.mail)),
-                          SizedBox(
+                    SizedBox(
                       height: 20, // Add more height here for additional space
                     ),
                     ElevatedButton(
@@ -163,12 +159,11 @@ class _RegisterState extends State<Register> {
                             MaterialStateProperty.all<Color>(Colors.white),
                       ),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => OTPScreen()),
-                        );
-                        // RegisterUser(context); 
-
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => OTPScreen()),
+                        // );
+                        RegisterUser(context);
                       },
                       child: const Text(
                         'SIGN UP',

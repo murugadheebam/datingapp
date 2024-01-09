@@ -6,7 +6,6 @@ import 'pages/pages/dashboard.dart';
 import 'pages/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final sharedPreferences = await SharedPreferences.getInstance();
@@ -17,19 +16,20 @@ void main() async {
     child: MyApp(),
   ));
 }
+
 class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final loggedIn = ref.watch(isLoggedInProvider); 
-      print('loggedIn: $loggedIn');
+    final loggedIn = ref.watch(isLoggedInProvider);
+    print('loggedIn: $loggedIn');
 
     if (loggedIn) {
       return MaterialApp(
-        home: Dashboard(), 
+        home: Dashboard(),
       );
     } else {
       return MaterialApp(
-        home: Login(), 
+        home: Dashboard(),
       );
     }
   }

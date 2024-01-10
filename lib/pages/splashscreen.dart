@@ -1,6 +1,6 @@
 import 'package:datingapp/pages/login.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; 
+import 'package:flutter/services.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -18,7 +18,8 @@ class _SplashScreenState extends State<SplashScreen>
         overlays: SystemUiOverlay.values);
 
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => Login()));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (_) => Login()));
     });
   }
 

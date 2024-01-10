@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:datingapp/pages/login.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,10 +14,19 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(seconds: 5), () {
+      // After 3 seconds, navigate to the login page
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => Login()));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    List<String> slideContents = [
+      'Open Minded\nLooks at matches for more personality and values/beliefs rather than just looks',
+      // Add more slide text contents here
+    ];
     return Scaffold(
       body: // Generated code for this PlaceholderWidget Widget...
           Container(
@@ -45,30 +56,39 @@ class _HomeState extends State<Home> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Align(
-                alignment: AlignmentDirectional(0, 0),
-                child: Padding(
-                  padding: EdgeInsets.all(9),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Text(
-                          'Open Pined',
-                        ),
-                      ),
-                      Align(
-                        alignment: AlignmentDirectional(0, 0),
-                        child: Text(
-                          'Looks at matches for more personality and values/beliefs rather than just looks',
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
+              child: CarouselSlider.builder(
+                itemCount: slideContents.length,
+                options: CarouselOptions(
+                  autoPlay: true,
+                  autoPlayInterval:
+                      Duration(seconds: 1), // Slide changes every 1 second
+                  autoPlayAnimationDuration: Duration(
+                      milliseconds: 800), // Slide animation lasts 0.8 seconds
+
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.9,
+                  aspectRatio: 2.0,
+                  initialPage: 0,
                 ),
+                itemBuilder: (context, index, realIdx) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(horizontal: 5.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    child: Center(
+                      child: Text(
+                        slideContents[index],
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
           ],

@@ -1,3 +1,4 @@
+import 'package:datingapp/pages/pages/otp.dart';
 import 'package:datingapp/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

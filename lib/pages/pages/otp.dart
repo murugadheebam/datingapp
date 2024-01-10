@@ -124,58 +124,63 @@ class _OTPScreenState extends State<OTPScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Image.asset(
-              'assets/login.png',
-              width: 300,
-              height: 200,
-              fit: BoxFit.contain,
-            ),
-            Spacer(),
-            Text(
-              'We have sent you a 6 digit verification code on Your Mobile and Email',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16.0),
-            ),
-            Spacer(),
-            // OTP input fields
-            Text('Mobile OTP'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(6, (index) => _buildMobileOTPBox(index)),
-            ),
-            Spacer(),
-            Text('Email OTP'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                  6,
-                  (index) => _buildEmailOTPBox(
-                      index)), // Offset by 6 for different focus nodes and controllers
-            ),
-            Spacer(),
-            // Timer text
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text('01:02'), // You'll need to implement a timer logic
-            ),
-            Spacer(),
-            // Resend button
-            Consumer(builder: (context, ref, child) {
-              return ElevatedButton(
-                onPressed: () {
-                  // Handle resend OTP
-                  Checkotp(context, ref);
-                },
-                child: Text('RESEND OTP'),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.pink, // Background color
-                ),
-              );
-            }),
-            Spacer(),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/otp-new.png',
+                width: 300,
+                height: 200,
+                fit: BoxFit.contain,
+              ),
+              
+              Text(
+                'We have sent you a 6 digit verification code on Your Mobile and Email',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16.0),
+              ),
+              SizedBox(height: 10),
+              // OTP input fields
+              Text('Mobile OTP'),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(6, (index) => _buildMobileOTPBox(index)),
+              ),
+              
+              SizedBox(height: 10),
+              Text('Email OTP'),
+              SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(
+                    6,
+                    (index) => _buildEmailOTPBox(
+                        index)), // Offset by 6 for different focus nodes and controllers
+              ),
+              
+              // Timer text
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Text('01:02'), // You'll need to implement a timer logic
+              ),
+              
+              // Resend button
+              Consumer(builder: (context, ref, child) {
+                return ElevatedButton(
+                  onPressed: () {
+                    // Handle resend OTP
+                    Checkotp(context, ref);
+                  },
+                  child: Text('RESEND OTP', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.pink, // Background color
+                  ),
+                );
+              }),
+              
+            ],
+          ),
         ),
       ),
     );

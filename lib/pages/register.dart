@@ -89,14 +89,15 @@ class _RegisterState extends State<Register> {
         ),
         // backgroundColor: Color(0xFF6a9739),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topRight, colors: [
-            const Color(0xfafafb),
-            const Color(0xe6c4d0).withOpacity(0.8)
-          ])),
+      body: Container(
+          height: size.height,
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topRight, colors: [
+          const Color(0xfafafb),
+          const Color(0xe6c4d0).withOpacity(0.8)
+        ])),
+        child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               Image.asset(

@@ -54,6 +54,14 @@ class Login extends StatelessWidget {
       }
     } catch (error) {
       // Handle any exceptions that might occur during the API call
+       ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Username Password not Valid"),
+            backgroundColor: Colors.red, // Change the background color here
+
+            duration: Duration(seconds: 3),
+          ),
+        );
       print("cgvdsfd");
       print('Error: $error');
     }

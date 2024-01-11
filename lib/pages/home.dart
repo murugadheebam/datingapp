@@ -14,8 +14,11 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5), () {
-      // After 3 seconds, navigate to the login page
+    
+  }
+
+  goLogin () {
+    Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => Login()));
     });
@@ -23,9 +26,22 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> slideContents = [
-      'Open Minded\nLooks at matches for more personality and values/beliefs rather than just looks',
-      // Add more slide text contents here
+    List slideContents = [
+      {
+        "title": "Open Minded",
+        "content":
+            "Looks at matches for more personality and values/beliefs rather than just looks",
+      },
+      {
+        "title": "Open Minded",
+        "content":
+            "Looks at matches for more personality and values/beliefs rather than just looks",
+      },
+      {
+        "title": "Open Minded",
+        "content":
+            "Looks at matches for more personality and values/beliefs rather than just looks",
+      }
     ];
     return Scaffold(
       body: // Generated code for this PlaceholderWidget Widget...
@@ -45,14 +61,15 @@ class _HomeState extends State<Home> {
               child: Image.asset(
                 'assets/logo.png',
                 width: 300,
-                height: 155,
+                height: 90,
                 fit: BoxFit.contain,
                 alignment: Alignment(0, 0),
               ),
             ),
+            SizedBox(height: 30),
             Container(
               width: MediaQuery.sizeOf(context).width,
-              height: MediaQuery.sizeOf(context).height * 0.121,
+              height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -61,36 +78,51 @@ class _HomeState extends State<Home> {
                 options: CarouselOptions(
                   autoPlay: true,
                   autoPlayInterval:
-                      Duration(seconds: 1), // Slide changes every 1 second
+                      Duration(seconds: 2), // Slide changes every 1 second
                   autoPlayAnimationDuration: Duration(
                       milliseconds: 800), // Slide animation lasts 0.8 seconds
-
                   enlargeCenterPage: true,
-                  viewportFraction: 0.9,
-                  aspectRatio: 2.0,
+                  viewportFraction: 0.8,
+                  enlargeFactor : 0.3,
+                  aspectRatio: 1,
                   initialPage: 0,
+                  onPageChanged: (index, reason) {
+                    index == 2 ? goLogin() : null;
+                  },
                 ),
                 itemBuilder: (context, index, realIdx) {
                   return Container(
+                    padding: EdgeInsets.all(10),
                     width: MediaQuery.of(context).size.width,
+                    height: 130,
                     margin: EdgeInsets.symmetric(horizontal: 5.0),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.8),
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    child: Center(
-                      child: Text(
-                        slideContents[index],
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16.0,
+                    child: Column(
+                      children: [
+                        Text(
+                          slideContents[index]["title"].toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.pink.shade700,
+                              fontSize: 20, fontWeight: FontWeight.w500),
                         ),
-                      ),
+                        Text(
+                          slideContents[index]["content"].toString(),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(),
+                        )
+                      ],
                     ),
                   );
                 },
               ),
             ),
+            // ElevatedButton(
+            //   onPressed :() { }, child: Text("Get Started")
+            // )
           ],
         ),
       ),

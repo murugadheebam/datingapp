@@ -19,13 +19,14 @@ class Login extends StatelessWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  bool isLoading = false;
 
   Future<void> loginUser(BuildContext context, WidgetRef ref) async {
-    print("check");
+    showLoader(context);
+    isLoading = true;
     final String email = emailController.text;
     final String password = passwordController.text;
-    print(email);
-    print(password);
 
     final Uri url =
         Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/login');
@@ -40,6 +41,7 @@ class Login extends StatelessWidget {
             .encode({'email': email, 'password': password, 'device': '289734'}),
       );
       print(response);
+
       if (response.statusCode == 200) {
         print(response.body);
         final userData = json.decode(response.body);
@@ -52,19 +54,48 @@ class Login extends StatelessWidget {
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
       }
+         // Hide loader
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+      isLoading = false;
     } catch (error) {
       // Handle any exceptions that might occur during the API call
-       ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Username Password not Valid"),
-            backgroundColor: Colors.red, // Change the background color here
-
-            duration: Duration(seconds: 3),
-          ),
-        );
-      print("cgvdsfd");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Username Password not Valid"),
+          backgroundColor: Colors.red, // Change the background color here
+          duration: Duration(seconds: 3),
+        ),
+      );
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+      isLoading = false;
       print('Error: $error');
     }
+  }
+
+  showLoader(context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          key: _keyLoader,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(color: Colors.pink,),
+                SizedBox(width: 20),
+                Text("Please Wait..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

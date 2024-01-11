@@ -19,9 +19,11 @@ class Login extends StatelessWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+    bool isLoading = false;
 
   Future<void> loginUser(BuildContext context, WidgetRef ref) async {
     print("check");
+  
     final String email = emailController.text;
     final String password = passwordController.text;
     print(email);
@@ -41,15 +43,32 @@ class Login extends StatelessWidget {
       );
       print(response);
       if (response.statusCode == 200) {
-        print(response.body);
         final userData = json.decode(response.body);
         ref.read(userProvider.notifier).state = userData;
         final prefs = ref.read(sharedPreferencesProvider);
         prefs.setString('userData', json.encode(userData));
+              ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(userData['message']),
+            backgroundColor: Colors.green, // Change the background color here
 
+            duration: Duration(seconds: 3),
+          ),
+        );
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OTPScreen()),
+        );
+      }else{
+                final ErrorResponse = json.decode(response.body);
+
+              ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(ErrorResponse['error_text']),
+            backgroundColor: Colors.red, // Change the background color here
+
+            duration: Duration(seconds: 3),
+          ),
         );
       }
     } catch (error) {

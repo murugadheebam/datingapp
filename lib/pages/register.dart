@@ -17,11 +17,16 @@ class _RegisterState extends State<Register> {
   final nameController = TextEditingController();
   final mobileController = TextEditingController();
   final mailidController = TextEditingController();
+    bool isLoading = false;
+
 
   final passwordController = TextEditingController();
 
   Future<void> RegisterUser(BuildContext context) async {
     print("check");
+     setState(() {
+    isLoading = true; // Start loading
+  });
     final String name = nameController.text;
     final String mobile_no = mobileController.text;
     final String email = mailidController.text;
@@ -47,14 +52,20 @@ class _RegisterState extends State<Register> {
       );
       print(response);
       if (response.statusCode == 200) {
+        setState(() {
+      isLoading = false; // Stop loading after API call is done
+    });
         print(response.body);
 
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
-      }
+      }else{}
     } catch (error) {
+      setState(() {
+      isLoading = false; // Stop loading after API call is done
+    });
       // Handle any exceptions that might occur during the API call
       print("cgvdsfd");
       print('Error: $error');
@@ -89,7 +100,9 @@ class _RegisterState extends State<Register> {
         ),
         // backgroundColor: Color(0xFF6a9739),
       ),
-      body: Container(
+      body: Stack(
+        children: [ 
+      Container(
           height: size.height,
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
@@ -189,6 +202,17 @@ class _RegisterState extends State<Register> {
           ),
         ),
       ),
+           if (isLoading)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.5), // Semi-transparent overlay
+                child: Center(
+                  child: Image.asset('assets/loading-heart.gif'), // Loading GIF
+                ),
+              ),
+            ),
+        ]
+      )
     );
   }
 }

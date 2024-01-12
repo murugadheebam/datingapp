@@ -1,11 +1,13 @@
 import 'package:datingapp/pages/pages/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_countdown_timer/index.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'provider.dart';
 import 'dart:convert';
+import 'dart:async';
 
 class OTPScreen extends StatefulWidget {
   @override
@@ -21,7 +23,37 @@ class _OTPScreenState extends State<OTPScreen> {
       List.generate(6, (index) => TextEditingController());
   List<FocusNode> mobileotpfocusNodes =
       List.generate(6, (index) => FocusNode());
+  late Timer _timer;
+  int _secondsRemaining = 900; // 15 minutes in seconds
 
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  bool isLoading = true;
+
+  void startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (_secondsRemaining > 0) {
+          _secondsRemaining--;
+        } else {
+          _timer.cancel(); // Stop the timer when it reaches 0
+        }
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  String formatTime(int seconds) {
+    int minutes = seconds ~/ 60;
+    int remainingSeconds = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+  }
+
+  // verify function
   Future<void> Checkotp(BuildContext context, WidgetRef ref) async {
     String emailOtp =
         emailotpcontrollers.map((controller) => controller.text).join();
@@ -31,14 +63,11 @@ class _OTPScreenState extends State<OTPScreen> {
     final userData = ref.watch(userProvider);
 
     if (userData != null) {
-      // Convert the userData map to a JSON string
       String jsonString = jsonEncode(userData);
-
-      // Decode the JSON string to a Map
       data = jsonDecode(jsonString);
-
-      // Now 'data' contains the decoded data from the 'userData' map
     }
+    isLoading = true;
+    showLoader(context);
 
     final Uri url = Uri.parse(
         'https://commitment.loveyourselfblog.in/api/v1/auth/otp/verify');
@@ -47,7 +76,6 @@ class _OTPScreenState extends State<OTPScreen> {
         url,
         headers: {
           'Content-Type': 'application/json',
-          // Add any other required headers here
         },
         body: json.encode({
           'emailOTP': emailOtp,
@@ -58,15 +86,20 @@ class _OTPScreenState extends State<OTPScreen> {
       );
       print(response);
       if (response.statusCode == 200) {
+    await Future.delayed(Duration(seconds: 1));
+    Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    isLoading = false;
         print(response.body);
         ref.read(isLoggedInProvider.notifier).state = true;
         final prefs = ref.read(sharedPreferencesProvider);
         prefs.setBool('isLoggedIn', true);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
-        );
+         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+    Dashboard()), (Route<dynamic> route) => false);
       } else {
+    await Future.delayed(Duration(seconds: 1));
+    Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+    isLoading = false;
+        await Future.delayed(Duration(seconds: 1));
         print(response.body);
         final Map<String, dynamic> errorData = json.decode(response.body);
         final errorMessage = errorData['error_text'] ?? 'OTP does not match';
@@ -81,7 +114,6 @@ class _OTPScreenState extends State<OTPScreen> {
         );
       }
     } catch (error) {
-      // Handle any exceptions that might occur during the API call
       print("cgvdsfd");
       print('Error: $error');
     }
@@ -94,7 +126,36 @@ class _OTPScreenState extends State<OTPScreen> {
 
     mobileotpcontrollers.forEach((controller) => controller.dispose());
     mobileotpfocusNodes.forEach((focusNode) => focusNode.dispose());
+    _timer.cancel();
     super.dispose();
+  }
+
+  showLoader(context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          key: _keyLoader,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(
+                  color: Colors.pink,
+                ),
+                SizedBox(width: 20),
+                Text("Please Wait..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -133,7 +194,7 @@ class _OTPScreenState extends State<OTPScreen> {
                 height: 200,
                 fit: BoxFit.contain,
               ),
-              
+
               Text(
                 'We have sent you a 6 digit verification code on Your Mobile and Email',
                 textAlign: TextAlign.center,
@@ -145,9 +206,10 @@ class _OTPScreenState extends State<OTPScreen> {
               SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(6, (index) => _buildMobileOTPBox(index)),
+                children:
+                    List.generate(6, (index) => _buildMobileOTPBox(index)),
               ),
-              
+
               SizedBox(height: 10),
               Text('Email OTP'),
               SizedBox(height: 10),
@@ -158,13 +220,21 @@ class _OTPScreenState extends State<OTPScreen> {
                     (index) => _buildEmailOTPBox(
                         index)), // Offset by 6 for different focus nodes and controllers
               ),
-              
+
               // Timer text
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text('01:02'), // You'll need to implement a timer logic
+                child: Text(formatTime(
+                    _secondsRemaining)), // You'll need to implement a timer logic
               ),
-              
+              if (_secondsRemaining < 0)
+                TextButton(
+                  onPressed: () {},
+                  child: Text('Resend', style: TextStyle(color: Colors.pink)),
+                  style: ElevatedButton.styleFrom(// Background color
+                      ),
+                ),
+
               // Resend button
               Consumer(builder: (context, ref, child) {
                 return ElevatedButton(
@@ -172,13 +242,13 @@ class _OTPScreenState extends State<OTPScreen> {
                     // Handle resend OTP
                     Checkotp(context, ref);
                   },
-                  child: Text('RESEND OTP', style: TextStyle(color: Colors.white)),
+                  child:
+                      Text('Continue', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.pink, // Background color
                   ),
                 );
               }),
-              
             ],
           ),
         ),

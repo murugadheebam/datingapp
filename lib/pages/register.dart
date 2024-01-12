@@ -17,24 +17,24 @@ class _RegisterState extends State<Register> {
   final nameController = TextEditingController();
   final mobileController = TextEditingController();
   final mailidController = TextEditingController();
-    bool isLoading = false;
+  final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  bool isLoading = true;
+
 
 
   final passwordController = TextEditingController();
 
   Future<void> RegisterUser(BuildContext context) async {
-    print("check");
-     setState(() {
-    isLoading = true; // Start loading
-  });
+    print("check"); 
+    isLoading = true;
+    showLoader(context);
     final String name = nameController.text;
     final String mobile_no = mobileController.text;
     final String email = mailidController.text;
 
     final String password = passwordController.text;
 
-    final Uri url = Uri.parse(
-        'https://commitment.loveyourselfblog.in/api/v1/auth/register');
+    final Uri url = Uri.parse(  'https://commitment.loveyourselfblog.in/api/v1/auth/register');
     try {
       final response = await http.post(
         url,
@@ -51,25 +51,69 @@ class _RegisterState extends State<Register> {
         }),
       );
       print(response);
-      if (response.statusCode == 200) {
-        setState(() {
-      isLoading = false; // Stop loading after API call is done
-    });
+      if (response.statusCode == 200) { 
         print(response.body);
+
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop(); 
+      isLoading = false;
 
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
-      }else{}
+      }else{
+        final ErrorResponse = json.decode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(ErrorResponse['error_text']),
+            backgroundColor: Colors.red, // Change the background color here
+
+            duration: Duration(seconds: 3),
+          ),
+        );
+      }
+
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop(); 
+      isLoading = false;
     } catch (error) {
-      setState(() {
-      isLoading = false; // Stop loading after API call is done
-    });
-      // Handle any exceptions that might occur during the API call
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop(); 
+      isLoading = false; 
       print("cgvdsfd");
       print('Error: $error');
+       
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Username Password not Valid"),
+          backgroundColor: Colors.red, // Change the background color here
+          duration: Duration(seconds: 3),
+        ),
+      ); 
     }
+  }
+  showLoader(context) {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+          key: _keyLoader,
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(color: Colors.pink,),
+                SizedBox(width: 20),
+                Text("Please Wait..."),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -157,7 +201,7 @@ class _RegisterState extends State<Register> {
                         controller: passwordController,
                         hintText: "Password",
                         obscureText: true,
-                        prefixicon: Icon(Icons.mail)),
+                        prefixicon: Icon(Icons.lock)),
                     SizedBox(
                       height: 20, // Add more height here for additional space
                     ),
@@ -201,18 +245,12 @@ class _RegisterState extends State<Register> {
             ],
           ),
         ),
-      ),
-           if (isLoading)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5), // Semi-transparent overlay
-                child: Center(
-                  child: Image.asset('assets/loading-heart.gif'), // Loading GIF
-                ),
-              ),
-            ),
+      ), 
         ]
       )
     );
   }
+
+  
 }
+

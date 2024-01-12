@@ -19,20 +19,13 @@ class Login extends StatelessWidget {
 
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-<<<<<<< HEAD
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  bool isLoading = false;
-
-  Future<void> loginUser(BuildContext context, WidgetRef ref) async {
-    showLoader(context);
-    isLoading = true;
-=======
-    bool isLoading = false;
+    bool isLoading = true;
 
   Future<void> loginUser(BuildContext context, WidgetRef ref) async {
     print("check");
-  
->>>>>>> 8a749d64c91b0a8b0188103e6650201368b7a10e
+    isLoading = true;
+    showLoader(context);
     final String email = emailController.text;
     final String password = passwordController.text;
 
@@ -51,6 +44,9 @@ class Login extends StatelessWidget {
       print(response);
 
       if (response.statusCode == 200) {
+        await Future.delayed(Duration(seconds: 1)); 
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
         final userData = json.decode(response.body);
         ref.read(userProvider.notifier).state = userData;
         final prefs = ref.read(sharedPreferencesProvider);
@@ -68,9 +64,10 @@ class Login extends StatelessWidget {
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
       }else{
-                final ErrorResponse = json.decode(response.body);
-
-              ScaffoldMessenger.of(context).showSnackBar(
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
+        final ErrorResponse = json.decode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(ErrorResponse['error_text']),
             backgroundColor: Colors.red, // Change the background color here
@@ -79,9 +76,6 @@ class Login extends StatelessWidget {
           ),
         );
       }
-         // Hide loader
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-      isLoading = false;
     } catch (error) {
       // Handle any exceptions that might occur during the API call
       ScaffoldMessenger.of(context).showSnackBar(
@@ -227,6 +221,8 @@ class Login extends StatelessWidget {
                   ],
                 ),
               ),
+
+                
               const SizedBox(
                 height: 30,
               ),
@@ -243,7 +239,7 @@ class Login extends StatelessWidget {
                   'Don\'t have an account? Sign Up',
                   style: TextStyle(color: Colors.black54, fontSize: 16),
                 ),
-              )
+              ),
             ],
           ),
         ),

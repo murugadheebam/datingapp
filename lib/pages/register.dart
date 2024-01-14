@@ -2,9 +2,11 @@ import 'package:datingapp/pages/components/my_input.dart';
 import 'package:datingapp/pages/home.dart';
 import 'package:datingapp/pages/login.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'pages/otp.dart';
+import 'pages/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({Key? key}) : super(key: key);
@@ -22,79 +24,68 @@ class _RegisterState extends State<Register> {
 
   final passwordController = TextEditingController();
 
-  Future<void> RegisterUser(BuildContext context) async { 
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OTPScreen()),
-        );
-    isLoading = true;
+  Future<void> RegisterUser(BuildContext context, WidgetRef ref) async {
+    print("check");
     showLoader(context);
     final String name = nameController.text;
     final String mobile_no = mobileController.text;
     final String email = mailidController.text;
-
+    setState(() {
+      isLoading = true;
+    });
     final String password = passwordController.text;
-    final headers = {
-      'Content-Type': 'application/json',
-    };
-    // final Uri url = Uri.parse("https://reqres.in/api/users?page=2");
-    final Uri url =  Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/signup');
-    final formData = {
+    var body = json.encode({
       'name': name,
       'email': email,
       'phone': '+91' + mobile_no,
       'password': password,
-      'retype_password': password,
-    };
-
-    String jsonData = json.encode(formData);
+      'retype_password': password
+    });
+    print('body:$body');
+    final Uri url = Uri.parse(
+        'https://commitment.loveyourselfblog.in/api/v1/auth/register');
     try {
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
-          // Add any other required headers here
         },
-        body: jsonData,
+        body: body,
       );
-      print(jsonData);
+      print("response.body");
+
+      print(response.body);
+
       if (response.statusCode == 200) {
-        print(response.body);
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-        isLoading = false;
+        final userData = json.decode(response.body);
+        ref.read(userProvider.notifier).state = userData;
+        final prefs = ref.read(sharedPreferencesProvider);
+        prefs.setString('userData', json.encode(userData));
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
-        final responsebody = json.decode(response.body);
-          ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(responsebody['message']),
-            backgroundColor: Colors.green.shade400, // Change the background color here
-
-            duration: Duration(seconds: 3),
-          ),
-        );
       } else {
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-      isLoading = false;
-        final dynamic responseBody = json.decode(response.body);
-        final String errorText =responseBody['error_text'] ?? '';
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+
+        final ErrorResponse = json.decode(response.body);
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(errorText),
-            backgroundColor: Colors.red.shade400, // Change the background color here
-            // showCloseIcon: true,
+            content: Text(ErrorResponse['message']),
+            backgroundColor:
+                Colors.green.shade400, // Change the background color here
+
             duration: Duration(seconds: 3),
           ),
         );
       }
-
     } catch (error) {
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-      isLoading = false;
-      print("Error on Catch Block");
+      print('name: $name');
+      print("cgvdsfd");
       print('Error: $error');
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -226,28 +217,31 @@ class _RegisterState extends State<Register> {
                           height:
                               20, // Add more height here for additional space
                         ),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all<Size?>(
-                                const Size(250.0, 55.0)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromRGBO(246, 46, 108, 1)),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                          ),
-                          onPressed: () {
-                            // Navigator.push(
-                            //   context,
-                            //   MaterialPageRoute(builder: (context) => OTPScreen()),
-                            // );
-                            RegisterUser(context);
-                          },
-                          child: const Text(
-                            'SIGN UP',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 16),
-                          ),
-                        ),
+                        Consumer(builder: (context, ref, child) {
+                          return ElevatedButton(
+                            style: ButtonStyle(
+                              minimumSize: MaterialStateProperty.all<Size?>(
+                                  const Size(250.0, 55.0)),
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  const Color.fromRGBO(246, 46, 108, 1)),
+                              foregroundColor: MaterialStateProperty.all<Color>(
+                                  Colors.white),
+                            ),
+                            onPressed: () {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //       builder: (context) => OTPScreen()),
+                              // );
+                              RegisterUser(context, ref);
+                            },
+                            child: const Text(
+                              'SIGN UP',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900, fontSize: 16),
+                            ),
+                          );
+                        })
                       ],
                     ),
                   ),

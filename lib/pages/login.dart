@@ -20,7 +20,7 @@ class Login extends StatelessWidget {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-    bool isLoading = true;
+  bool isLoading = true;
 
   Future<void> loginUser(BuildContext context, WidgetRef ref) async {
     print("check");
@@ -44,14 +44,14 @@ class Login extends StatelessWidget {
       print(response);
 
       if (response.statusCode == 200) {
-        await Future.delayed(Duration(seconds: 1)); 
+        await Future.delayed(Duration(seconds: 1));
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
         isLoading = false;
         final userData = json.decode(response.body);
         ref.read(userProvider.notifier).state = userData;
         final prefs = ref.read(sharedPreferencesProvider);
         prefs.setString('userData', json.encode(userData));
-              ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(userData['message']),
             backgroundColor: Colors.green, // Change the background color here
@@ -63,11 +63,11 @@ class Login extends StatelessWidget {
           context,
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
-      }else{
+      } else {
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
         isLoading = false;
         final ErrorResponse = json.decode(response.body);
-          ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(ErrorResponse['error_text']),
             backgroundColor: Colors.red, // Change the background color here
@@ -106,7 +106,9 @@ class Login extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: Colors.pink,),
+                CircularProgressIndicator(
+                  color: Colors.pink,
+                ),
                 SizedBox(width: 20),
                 Text("Please Wait..."),
               ],
@@ -221,8 +223,6 @@ class Login extends StatelessWidget {
                   ],
                 ),
               ),
-
-                
               const SizedBox(
                 height: 30,
               ),

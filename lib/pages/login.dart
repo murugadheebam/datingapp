@@ -54,7 +54,7 @@ class Login extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(userData['message']),
-            backgroundColor: Colors.green, // Change the background color here
+            backgroundColor: Colors.green.shade400, // Change the background color here
 
             duration: Duration(seconds: 3),
           ),

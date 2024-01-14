@@ -50,13 +50,7 @@ class _RegisterState extends State<Register> {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: json.encode({
-          'name': name,
-          'email': email,
-          'phone': '+91' + mobile_no,
-          'password': password,
-          'retype_password': password
-        }),
+        body: body,
       );
       print("response.body");
 
@@ -79,8 +73,9 @@ class _RegisterState extends State<Register> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(ErrorResponse['error_text']),
-            backgroundColor: Colors.red, // Change the background color here
+            content: Text(ErrorResponse['message']),
+            backgroundColor:
+                Colors.green.shade400, // Change the background color here
 
             duration: Duration(seconds: 3),
           ),
@@ -94,7 +89,7 @@ class _RegisterState extends State<Register> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Username Password not Valid"),
+          content: Text(error.toString()),
           backgroundColor: Colors.red, // Change the background color here
           duration: Duration(seconds: 3),
         ),

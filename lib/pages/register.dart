@@ -23,6 +23,10 @@ class _RegisterState extends State<Register> {
   final passwordController = TextEditingController();
 
   Future<void> RegisterUser(BuildContext context) async { 
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OTPScreen()),
+        );
     isLoading = true;
     showLoader(context);
     final String name = nameController.text;

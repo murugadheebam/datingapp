@@ -84,7 +84,7 @@ class _OTPScreenState extends State<OTPScreen> {
           'device': '123'
         }),
       );
-      print(emailOtp);
+      print(data?['id']);
       print(mobileOtp);
       if (response.statusCode == 200) {
         await Future.delayed(Duration(seconds: 1));

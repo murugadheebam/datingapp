@@ -84,21 +84,23 @@ class _OTPScreenState extends State<OTPScreen> {
           'device': '123'
         }),
       );
-      print(response);
+      print(emailOtp);
+      print(mobileOtp);
       if (response.statusCode == 200) {
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-    isLoading = false;
+        await Future.delayed(Duration(seconds: 1));
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
         print(response.body);
         ref.read(isLoggedInProvider.notifier).state = true;
         final prefs = ref.read(sharedPreferencesProvider);
         prefs.setBool('isLoggedIn', true);
-         Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-    Dashboard()), (Route<dynamic> route) => false);
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => Dashboard()),
+            (Route<dynamic> route) => false);
       } else {
-    await Future.delayed(Duration(seconds: 1));
-    Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-    isLoading = false;
+        await Future.delayed(Duration(seconds: 1));
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
         await Future.delayed(Duration(seconds: 1));
         print(response.body);
         final Map<String, dynamic> errorData = json.decode(response.body);
@@ -160,6 +162,7 @@ class _OTPScreenState extends State<OTPScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -183,8 +186,14 @@ class _OTPScreenState extends State<OTPScreen> {
         ),
         // backgroundColor: Color(0xFF6a9739),
       ),
-      body: Padding(
+      body: Container(
+        height: size.height,
         padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topRight, colors: [
+          const Color(0xFAFAFB),
+          const Color(0xE6C4D0).withOpacity(0.8)
+        ])),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -194,57 +203,78 @@ class _OTPScreenState extends State<OTPScreen> {
                 height: 200,
                 fit: BoxFit.contain,
               ),
-
-              Text(
-                'We have sent you a 6 digit verification code on Your Mobile and Email',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16.0),
-              ),
-              SizedBox(height: 10),
-              // OTP input fields
-              Text('Mobile OTP'),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:
-                    List.generate(6, (index) => _buildMobileOTPBox(index)),
-              ),
-
-              SizedBox(height: 10),
-              Text('Email OTP'),
-              SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(
-                    6,
-                    (index) => _buildEmailOTPBox(
-                        index)), // Offset by 6 for different focus nodes and controllers
-              ),
-
-              // Timer text
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text(formatTime(
-                    _secondsRemaining)), // You'll need to implement a timer logic
-              ),
-              if (_secondsRemaining < 0)
-                TextButton(
-                  onPressed: () {},
-                  child: Text('Resend', style: TextStyle(color: Colors.pink)),
-                  style: ElevatedButton.styleFrom(// Background color
+              SizedBox(height: 20),
+              Card(
+                elevation: 0,
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Column(
+                    children: [
+                      Text(
+                        'We have sent you a 6 digit verification code on Your Mobile and Email',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 16.0),
                       ),
+                      SizedBox(height: 10),
+                      // OTP input fields
+                      Text('Mobile OTP', style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 15),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(
+                            6, (index) => _buildMobileOTPBox(index)),
+                      ),
+
+                      SizedBox(height: 15),
+                      const Divider(
+                        height: 20,
+                        thickness: 1,
+                        indent: 20,
+                        endIndent: 0,
+                        color: Colors.black12,
+                      ),
+                      SizedBox(height: 10),
+                      Text('Email OTP', style: TextStyle(fontSize: 18)),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(
+                            6,
+                            (index) => _buildEmailOTPBox(
+                                index)), // Offset by 6 for different focus nodes and controllers
+                      ),
+
+                      // Timer text
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(formatTime(
+                            _secondsRemaining)), // You'll need to implement a timer logic
+                      ),
+                      if (_secondsRemaining < 0)
+                        TextButton(
+                          onPressed: () {},
+                          child: Text('Resend',
+                              style: TextStyle(color: Colors.pink)),
+                          style: ElevatedButton.styleFrom(// Background color
+                              ),
+                        ),
+                    ],
+                  ),
                 ),
+              ),
+              SizedBox(height: 10),
 
               // Resend button
               Consumer(builder: (context, ref, child) {
                 return ElevatedButton(
                   onPressed: () {
-                    // Handle resend OTP
                     Checkotp(context, ref);
                   },
                   child:
                       Text('Continue', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
+                   fixedSize: Size(160, 50), 
+                  //  maximumSize: Size.fromWidth(300),
                     primary: Colors.pink, // Background color
                   ),
                 );

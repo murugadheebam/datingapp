@@ -20,12 +20,9 @@ class _RegisterState extends State<Register> {
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
   bool isLoading = true;
 
-
-
   final passwordController = TextEditingController();
 
-  Future<void> RegisterUser(BuildContext context) async {
-    print("check"); 
+  Future<void> RegisterUser(BuildContext context) async { 
     isLoading = true;
     showLoader(context);
     final String name = nameController.text;
@@ -33,8 +30,20 @@ class _RegisterState extends State<Register> {
     final String email = mailidController.text;
 
     final String password = passwordController.text;
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    // final Uri url = Uri.parse("https://reqres.in/api/users?page=2");
+    final Uri url =  Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/signup');
+    final formData = {
+      'name': name,
+      'email': email,
+      'phone': '+91' + mobile_no,
+      'password': password,
+      'retype_password': password,
+    };
 
-    final Uri url = Uri.parse(  'https://commitment.loveyourselfblog.in/api/v1/auth/register');
+    String jsonData = json.encode(formData);
     try {
       final response = await http.post(
         url,
@@ -42,54 +51,57 @@ class _RegisterState extends State<Register> {
           'Content-Type': 'application/json',
           // Add any other required headers here
         },
-        body: json.encode({
-          'name': name,
-          'email': email,
-          'phone': '+91' + mobile_no,
-          'password': password,
-          'retype_password': password
-        }),
+        body: jsonData,
       );
-      print(response);
-      if (response.statusCode == 200) { 
+      print(jsonData);
+      if (response.statusCode == 200) {
         print(response.body);
-
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop(); 
-      isLoading = false;
-
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => OTPScreen()),
         );
-      }else{
-        final ErrorResponse = json.decode(response.body);
+        final responsebody = json.decode(response.body);
           ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(ErrorResponse['error_text']),
-            backgroundColor: Colors.red, // Change the background color here
+            content: Text(responsebody['message']),
+            backgroundColor: Colors.green.shade400, // Change the background color here
 
+            duration: Duration(seconds: 3),
+          ),
+        );
+      } else {
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+      isLoading = false;
+        final dynamic responseBody = json.decode(response.body);
+        final String errorText =responseBody['error_text'] ?? '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorText),
+            backgroundColor: Colors.red.shade400, // Change the background color here
+            // showCloseIcon: true,
             duration: Duration(seconds: 3),
           ),
         );
       }
 
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop(); 
-      isLoading = false;
     } catch (error) {
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop(); 
-      isLoading = false; 
-      print("cgvdsfd");
+      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+      isLoading = false;
+      print("Error on Catch Block");
       print('Error: $error');
-       
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Username Password not Valid"),
+          content: Text(error.toString()),
           backgroundColor: Colors.red, // Change the background color here
           duration: Duration(seconds: 3),
         ),
-      ); 
+      );
     }
   }
+
   showLoader(context) {
     return showDialog(
       context: context,
@@ -105,7 +117,9 @@ class _RegisterState extends State<Register> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: Colors.pink,),
+                CircularProgressIndicator(
+                  color: Colors.pink,
+                ),
                 SizedBox(width: 20),
                 Text("Please Wait..."),
               ],
@@ -120,137 +134,135 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Container(
-          width: double.infinity,
-          padding: EdgeInsets.only(right: 40),
-          child: Text(
-            'Sign Up',
-            style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
-                color: Colors.black87),
-            textAlign: TextAlign.center,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(right: 40),
+            child: Text(
+              'Sign Up',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  color: Colors.black87),
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.black), // Set the back arrow color to black
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        // backgroundColor: Color(0xFF6a9739),
-      ),
-      body: Stack(
-        children: [ 
-      Container(
-          height: size.height,
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-            gradient: LinearGradient(begin: Alignment.topRight, colors: [
-          const Color(0xfafafb),
-          const Color(0xe6c4d0).withOpacity(0.8)
-        ])),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              Image.asset(
-                'assets/signup.png',
-                width: 300,
-                height: 200,
-                fit: BoxFit.contain,
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Container(
-                padding: const EdgeInsets.all(30.0),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20)),
-                child: Column(
-                  children: [
-                    MyInput(
-                        controller: nameController,
-                        hintText: "Name",
-                        obscureText: false,
-                        prefixicon: Icon(Icons.person_sharp)),
-                    SizedBox(
-                      height: 20, // Add more height here for additional space
-                    ),
-                    MyInput(
-                        controller: mobileController,
-                        hintText: "Phone Number",
-                        obscureText: false,
-                        prefixicon: Icon(Icons.phone_android)),
-                    SizedBox(
-                      height: 20, // Add more height here for additional space
-                    ),
-                    MyInput(
-                        controller: mailidController,
-                        hintText: "Email",
-                        obscureText: false,
-                        prefixicon: Icon(Icons.mail)),
-                    SizedBox(
-                      height: 20, // Add more height here for additional space
-                    ),
-                    MyInput(
-                        controller: passwordController,
-                        hintText: "Password",
-                        obscureText: true,
-                        prefixicon: Icon(Icons.lock)),
-                    SizedBox(
-                      height: 20, // Add more height here for additional space
-                    ),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        minimumSize: MaterialStateProperty.all<Size?>(
-                            const Size(250.0, 55.0)),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromRGBO(246, 46, 108, 1)),
-                        foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
-                      ),
-                      onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (context) => OTPScreen()),
-                        // );
-                        RegisterUser(context);
-                      },
-                      child: const Text(
-                        'SIGN UP',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w900, fontSize: 16),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Login()),
-                  );
-                },
-                child: Text(
-                  'Already have an account? Log In',
-                  style: TextStyle(color: Colors.black54, fontSize: 16),
-                ),
-              )
-            ],
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: Colors.black), // Set the back arrow color to black
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
+          // backgroundColor: Color(0xFF6a9739),
         ),
-      ), 
-        ]
-      )
-    );
+        body: Stack(children: [
+          Container(
+            height: size.height,
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+                gradient: LinearGradient(begin: Alignment.topRight, colors: [
+              const Color(0xfafafb),
+              const Color(0xe6c4d0).withOpacity(0.8)
+            ])),
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Image.asset(
+                    'assets/signup.png',
+                    width: 300,
+                    height: 200,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(30.0),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      children: [
+                        MyInput(
+                            controller: nameController,
+                            hintText: "Name",
+                            obscureText: false,
+                            prefixicon: Icon(Icons.person_sharp)),
+                        SizedBox(
+                          height:
+                              20, // Add more height here for additional space
+                        ),
+                        MyInput(
+                            controller: mobileController,
+                            hintText: "Phone Number",
+                            obscureText: false,
+                            prefixicon: Icon(Icons.phone_android)),
+                        SizedBox(
+                          height:
+                              20, // Add more height here for additional space
+                        ),
+                        MyInput(
+                            controller: mailidController,
+                            hintText: "Email",
+                            obscureText: false,
+                            prefixicon: Icon(Icons.mail)),
+                        SizedBox(
+                          height:
+                              20, // Add more height here for additional space
+                        ),
+                        MyInput(
+                            controller: passwordController,
+                            hintText: "Password",
+                            obscureText: true,
+                            prefixicon: Icon(Icons.lock)),
+                        SizedBox(
+                          height:
+                              20, // Add more height here for additional space
+                        ),
+                        ElevatedButton(
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all<Size?>(
+                                const Size(250.0, 55.0)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                const Color.fromRGBO(246, 46, 108, 1)),
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                          ),
+                          onPressed: () {
+                            // Navigator.push(
+                            //   context,
+                            //   MaterialPageRoute(builder: (context) => OTPScreen()),
+                            // );
+                            RegisterUser(context);
+                          },
+                          child: const Text(
+                            'SIGN UP',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w900, fontSize: 16),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    },
+                    child: Text(
+                      'Already have an account? Log In',
+                      style: TextStyle(color: Colors.black54, fontSize: 16),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ]));
   }
-
-  
 }
-

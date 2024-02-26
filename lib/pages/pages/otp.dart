@@ -1,4 +1,6 @@
+import 'package:datingapp/pages/login.dart';
 import 'package:datingapp/pages/pages/dashboard.dart';
+import 'package:datingapp/pages/pages/search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/index.dart';
@@ -10,11 +12,16 @@ import 'dart:convert';
 import 'dart:async';
 
 class OTPScreen extends StatefulWidget {
+  final String type;
+  OTPScreen({required this.type});
+
   @override
   _OTPScreenState createState() => _OTPScreenState();
 }
 
 class _OTPScreenState extends State<OTPScreen> {
+  String get type => widget.type;
+
   List<TextEditingController> emailotpcontrollers =
       List.generate(6, (index) => TextEditingController());
   List<FocusNode> emailotpfocusNodes = List.generate(6, (index) => FocusNode());
@@ -68,6 +75,8 @@ class _OTPScreenState extends State<OTPScreen> {
     }
     isLoading = true;
     showLoader(context);
+    print("UserID: ");
+    print(data?['id']);
 
     final Uri url = Uri.parse(
         'https://commitment.loveyourselfblog.in/api/v1/auth/otp/verify');
@@ -94,9 +103,20 @@ class _OTPScreenState extends State<OTPScreen> {
         ref.read(isLoggedInProvider.notifier).state = true;
         final prefs = ref.read(sharedPreferencesProvider);
         prefs.setBool('isLoggedIn', true);
+
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Dashboard()),
+            MaterialPageRoute(
+                builder: (context) => Search()),
             (Route<dynamic> route) => false);
+        final successMessage = widget.type == "login" ? "You are Logedin" : "Successfully Registered" ;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(successMessage),
+            backgroundColor:
+                Colors.green.shade400,
+            duration: Duration(seconds: 3),
+          ),
+        );
       } else {
         await Future.delayed(Duration(seconds: 1));
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
@@ -118,6 +138,15 @@ class _OTPScreenState extends State<OTPScreen> {
     } catch (error) {
       print("cgvdsfd");
       print('Error: $error');
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Something went Wrong"),
+            backgroundColor: Colors.red, // Change the background color here
+
+            duration: Duration(seconds: 3),
+          ),
+        );
     }
   }
 
@@ -273,8 +302,8 @@ class _OTPScreenState extends State<OTPScreen> {
                   child:
                       Text('Continue', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                   fixedSize: Size(160, 50), 
-                  //  maximumSize: Size.fromWidth(300),
+                    fixedSize: Size(160, 50),
+                    //  maximumSize: Size.fromWidth(300),
                     primary: Colors.pink, // Background color
                   ),
                 );

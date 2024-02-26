@@ -156,35 +156,6 @@ class ProfileState extends State<Profile> {
                           );
                         }).toList(),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          FloatingActionButton(
-                            onPressed: () {},
-                            child: Image.asset('call.png',
-                                width: 20, height: 20, color: Colors.white),
-                            backgroundColor: Color(0xFFff0068),
-                            elevation: 6.0,
-                            highlightElevation: 8.0,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () {},
-                            child: Image.asset('zoom.png',
-                                width: 20, height: 20, color: Colors.white),
-                            backgroundColor: Color(0xFFff0068),
-                            elevation: 6.0,
-                            highlightElevation: 8.0,
-                          ),
-                          FloatingActionButton(
-                            onPressed: () {},
-                            child: Image.asset('chat.png',
-                                width: 20, height: 20, color: Colors.white),
-                            backgroundColor: Color(0xFFff0068),
-                            elevation: 6.0,
-                            highlightElevation: 8.0,
-                          )
-                        ],
-                      ),
                     ],
                   ),
                 ),

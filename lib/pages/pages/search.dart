@@ -21,18 +21,18 @@ class _SearchState extends State<Search> {
         title: Text('Search'),
       ),
       drawer: Sidemenu(),
-      body: SingleChildScrollView(
-        child: Container(
-            height: size.height,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topRight, colors: [
-            const Color(0xFAFAFB),
-            const Color(0xE6C4D0).withOpacity(0.8)
-          ])),
+      body: Container(
+          height: size.height,
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topRight, colors: [
+          const Color(0xFAFAFB),
+          const Color(0xE6C4D0).withOpacity(0.8)
+        ])),
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              Image.asset("assets/icon/hearts.svg"),
+              Image.asset("assets/hearts.png", height: 40),
               Text(
                 'Find a Match',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: const Color.fromARGB(255, 9, 94, 136)),

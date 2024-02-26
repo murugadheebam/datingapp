@@ -141,9 +141,17 @@ class Sidemenu extends ConsumerWidget {
               // Add functionality here when item 2 is tapped
             },
           ),
-          // Add more ListTile widgets for additional menu items
+          ListTile(
+            trailing: Image.asset('assets/images/icons/exit.png', width: 24, height: 24),
+            title: SidemenuItem(menuText: "Logout"),
+            onTap: () {
+              // Add functionality here when item 2 is tapped
+            },
+          ),
+          
         ],
       ),
+      
     );
   }
 }

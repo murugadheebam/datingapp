@@ -20,72 +20,88 @@ class _RegisterState extends State<Register> {
   final mobileController = TextEditingController();
   final mailidController = TextEditingController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
+  String selectedItem = '+44 UK';
+  List<String> items = ['+44 UK', '+91 India'];
   bool isLoading = true;
 
   final passwordController = TextEditingController();
 
   Future<void> RegisterUser(BuildContext context, WidgetRef ref) async {
-    print("check");
+    isLoading = true;
     showLoader(context);
     final String name = nameController.text;
     final String mobile_no = mobileController.text;
     final String email = mailidController.text;
-    setState(() {
-      isLoading = true;
-    });
+
     final String password = passwordController.text;
-    var body = json.encode({
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+    // final Uri url = Uri.parse("https://reqres.in/api/users?page=2");
+    final Uri url =
+        Uri.parse('https://commitment.loveyourselfblog.in/api/v1/auth/signup');
+    final formData = {
       'name': name,
       'email': email,
-      'phone': '+91' + mobile_no,
+      'phone': '' + mobile_no,
       'password': password,
-      'retype_password': password
-    });
-    print('body:$body');
-    final Uri url = Uri.parse(
-        'https://commitment.loveyourselfblog.in/api/v1/auth/register');
+      'retype_password': password,
+    };
+
+    String jsonData = json.encode(formData);
     try {
       final response = await http.post(
         url,
         headers: {
           'Content-Type': 'application/json',
+          // Add any other required headers here
         },
-        body: body,
+        body: jsonData,
       );
-      print("response.body");
-
-      print(response.body);
-
+      print(jsonData);
       if (response.statusCode == 200) {
+        print(response.body);
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => OTPScreen(type: "signup")),
+        );
+        final responsebody = json.decode(response.body);
+
         final userData = json.decode(response.body);
         ref.read(userProvider.notifier).state = userData;
         final prefs = ref.read(sharedPreferencesProvider);
         prefs.setString('userData', json.encode(userData));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => OTPScreen()),
-        );
-      } else {
-        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
-
-        final ErrorResponse = json.decode(response.body);
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(ErrorResponse['message']),
+            content: Text(responsebody['message']),
             backgroundColor:
                 Colors.green.shade400, // Change the background color here
 
             duration: Duration(seconds: 3),
           ),
         );
+      } else {
+        Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+        isLoading = false;
+        final dynamic responseBody = json.decode(response.body);
+        final String errorText = responseBody['error_text'] ?? '';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorText),
+            backgroundColor:
+                Colors.red.shade400, // Change the background color here
+            // showCloseIcon: true,
+            duration: Duration(seconds: 3),
+          ),
+        );
       }
     } catch (error) {
-      print('name: $name');
-      print("cgvdsfd");
-      print('Error: $error');
       Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+      isLoading = false;
+      print("Error on Catch Block");
+      print('Error: $error');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -190,6 +206,31 @@ class _RegisterState extends State<Register> {
                           height:
                               20, // Add more height here for additional space
                         ),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(100)
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton( 
+                              value: selectedItem,
+                              items: items.map((String item) {
+                                return DropdownMenuItem(
+                                  value: item,
+                                  child: Text(item),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  selectedItem = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(  height:  20 ),
                         MyInput(
                             controller: mobileController,
                             hintText: "Phone Number",
@@ -230,8 +271,7 @@ class _RegisterState extends State<Register> {
                             onPressed: () {
                               // Navigator.push(
                               //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => OTPScreen()),
+                              //   MaterialPageRoute(builder: (context) => OTPScreen()),
                               // );
                               RegisterUser(context, ref);
                             },
@@ -241,7 +281,7 @@ class _RegisterState extends State<Register> {
                                   fontWeight: FontWeight.w900, fontSize: 16),
                             ),
                           );
-                        })
+                        }),
                       ],
                     ),
                   ),

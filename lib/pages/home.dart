@@ -14,10 +14,9 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    
   }
 
-  goLogin () {
+  goLogin() {
     Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (_) => Login()));
@@ -69,7 +68,6 @@ class _HomeState extends State<Home> {
             SizedBox(height: 30),
             Container(
               width: MediaQuery.sizeOf(context).width,
-              height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -82,39 +80,41 @@ class _HomeState extends State<Home> {
                   autoPlayAnimationDuration: Duration(
                       milliseconds: 800), // Slide animation lasts 0.8 seconds
                   enlargeCenterPage: true,
-                  viewportFraction: 0.8,
-                  enlargeFactor : 0.3,
-                  aspectRatio: 1,
+                  // viewportFraction: 0.8,
+                  // enlargeFactor : 0.3,
+                  aspectRatio: 24 / 9,
                   initialPage: 0,
                   onPageChanged: (index, reason) {
                     index == 2 ? goLogin() : null;
                   },
                 ),
                 itemBuilder: (context, index, realIdx) {
-                  return Container(
-                    padding: EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 130,
-                    margin: EdgeInsets.symmetric(horizontal: 5.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    child: Column(
-                      children: [
-                        Text(
-                          slideContents[index]["title"].toString(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.pink.shade700,
-                              fontSize: 20, fontWeight: FontWeight.w500),
-                        ),
-                        Text(
-                          slideContents[index]["content"].toString(),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(),
-                        )
-                      ],
+                  return Card(
+                    elevation: 0,
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            slideContents[index]["title"].toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.pink.shade700,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            slideContents[index]["content"].toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 4,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },

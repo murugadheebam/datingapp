@@ -2,6 +2,10 @@ import 'package:datingapp/pages/components/my_input.dart';
 import 'package:datingapp/pages/home.dart';
 import 'package:datingapp/pages/pages/account.dart';
 import 'package:datingapp/pages/pages/dashboard.dart';
+import 'package:datingapp/pages/pages/majorissues.dart';
+import 'package:datingapp/pages/pages/profile.dart';
+import 'package:datingapp/pages/pages/profile/CreateProfile.dart';
+import 'package:datingapp/pages/pages/search.dart';
 import 'package:datingapp/pages/register.dart';
 import 'package:datingapp/pages/splashscreen.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +27,11 @@ class Login extends StatelessWidget {
   bool isLoading = true;
 
   Future<void> loginUser(BuildContext context, WidgetRef ref) async {
-    print("check");
+    
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => CreateProfile()),
+        );
     isLoading = true;
     showLoader(context);
     final String email = emailController.text;
@@ -61,7 +69,7 @@ class Login extends StatelessWidget {
         );
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => OTPScreen()),
+          MaterialPageRoute(builder: (context) => OTPScreen(type: "login")),
         );
       } else {
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
@@ -146,15 +154,15 @@ class Login extends StatelessWidget {
         ),
         // backgroundColor: Color(0xFF6a9739),
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          height: size.height,
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topRight, colors: [
-            const Color(0xFAFAFB),
-            const Color(0xE6C4D0).withOpacity(0.8)
-          ])),
+      body: Container(
+        height: size.height,
+        padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(begin: Alignment.topRight, colors: [
+          const Color(0xFAFAFB),
+          const Color(0xE6C4D0).withOpacity(0.8)
+        ])),
+        child: SingleChildScrollView(
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

@@ -93,83 +93,90 @@ class CreateProfileState extends State<CreateProfile> {
                         MyInput(
                           controller: heightController,
                           hintText: "Enter Height",
-                          obscureText: false, 
+                          obscureText: false,
                         ),
                         SizedBox(height: 8),
                         Text("Weight"),
                         MyInput(
                           controller: weightController,
                           hintText: "Enter Weight",
-                          obscureText: false, 
+                          obscureText: false,
                         ),
                         SizedBox(height: 8),
                         Text("Ethnicity"),
                         MyInput(
                           controller: ethnicityController,
                           hintText: "Enter Ethnicity",
-                          obscureText: false, 
+                          obscureText: false,
                         ),
                         SizedBox(height: 8),
                         Text("DOB"),
                         MyInput(
                           controller: dobController,
                           hintText: "DD/MM/YYYY",
-                          obscureText: false, 
+                          obscureText: false,
                         ),
                         SizedBox(height: 8),
                         Text("Gender"),
                         MyInput(
                           controller: genderController,
                           hintText: "Email",
-                          obscureText: false, 
+                          obscureText: false,
                         ),
                       ]),
                 ),
               ),
               Card(
-                elevation: 0,
-                child: Padding(padding: EdgeInsets.all(10), 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Additional Pics",
+                  elevation: 0,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Additional Pics",
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
-                          ),)
-                  ],
-                ),)
-              ),
-              SizedBox(height: 20),
-                        ElevatedButton(
-                          style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all<Size?>(
-                                const Size(250.0, 55.0)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                const Color.fromRGBO(246, 46, 108, 1)),
-                            foregroundColor:
-                                MaterialStateProperty.all<Color>(Colors.white),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    30.0), // Set your desired border radius here
-                              ),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                            );
-                          },
-                          child: const Text(
-                            'Submit',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w900, fontSize: 16),
                           ),
                         ),
+
+                        Row(
+                          children: [
+                            
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
+              SizedBox(height: 20),
+              ElevatedButton(
+                style: ButtonStyle(
+                  minimumSize:
+                      MaterialStateProperty.all<Size?>(const Size(250.0, 55.0)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromRGBO(246, 46, 108, 1)),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.white),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                          30.0), // Set your desired border radius here
+                    ),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Home()),
+                  );
+                },
+                child: const Text(
+                  'Submit',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                ),
+              ),
             ]),
       )),
     );

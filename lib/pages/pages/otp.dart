@@ -304,7 +304,7 @@ class _OTPScreenState extends State<OTPScreen> {
                   style: ElevatedButton.styleFrom(
                     fixedSize: Size(160, 50),
                     //  maximumSize: Size.fromWidth(300),
-                    primary: Colors.pink, // Background color
+                    backgroundColor: Colors.pink, // Background color
                   ),
                 );
               }),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:datingapp/pages/login.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/widgets.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -32,14 +33,14 @@ class _HomeState extends State<Home> {
             "Looks at matches for more personality and values/beliefs rather than just looks",
       },
       {
-        "title": "Open Minded",
+        "title": "Soulful Matcher",
         "content":
-            "Looks at matches for more personality and values/beliefs rather than just looks",
+            "Emphasizes the importance of aligning with someone on a deeper level, focusing on inner qualities, values, and emotional resonance over outward appearances.",
       },
       {
-        "title": "Open Minded",
+        "title": "Depth Seeker",
         "content":
-            "Looks at matches for more personality and values/beliefs rather than just looks",
+            "Prioritizes compatibility based on shared interests, passions, and intellectual connection rather than superficial attributes.",
       }
     ];
     return Scaffold(
@@ -106,12 +107,14 @@ class _HomeState extends State<Home> {
                                 fontSize: 20,
                                 fontWeight: FontWeight.w500),
                           ),
-                          Text(
-                            slideContents[index]["content"].toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 4,
+                          Expanded(
+                            child: Text(
+                              slideContents[index]["content"].toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 4,
+                            ),
                           ),
                         ],
                       ),

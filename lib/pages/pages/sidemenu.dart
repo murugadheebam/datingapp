@@ -1,3 +1,6 @@
+import 'package:datingapp/pages/login.dart';
+import 'package:datingapp/pages/pages/profile/CreateProfile.dart';
+import 'package:datingapp/pages/pages/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'search.dart';
@@ -12,8 +15,7 @@ class Sidemenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-  return Drawer(
+    return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
@@ -87,7 +89,7 @@ class Sidemenu extends ConsumerWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        Profile()), // Replace YourDestinationPage with the page you want to navigate to
+                        CreateProfile()), // Replace YourDestinationPage with the page you want to navigate to
               );
             },
           ),
@@ -139,29 +141,36 @@ class Sidemenu extends ConsumerWidget {
             title: SidemenuItem(menuText: "App Feedback"),
             onTap: () {
               // Add functionality here when item 2 is tapped
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Majorissues()),
+              );
             },
           ),
           ListTile(
-            trailing: Image.asset('assets/images/icons/exit.png', width: 24, height: 24),
+            trailing: Image.asset('assets/images/icons/exit.png',
+                width: 24, height: 24),
             title: SidemenuItem(menuText: "Logout"),
             onTap: () {
-              // Add functionality here when item 2 is tapped
+              ref.read(userProvider.notifier).state = null;
+
+              final prefs = ref.read(sharedPreferencesProvider);
+              prefs.remove('userData');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Login()),
+              );
             },
           ),
-          
         ],
       ),
-      
     );
   }
 }
 
 class SidemenuItem extends StatelessWidget {
   final menuText;
-  const SidemenuItem({
-    super.key,
-    required this.menuText
-  });
+  const SidemenuItem({super.key, required this.menuText});
 
   @override
   Widget build(BuildContext context) {

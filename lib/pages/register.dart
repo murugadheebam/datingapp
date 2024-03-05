@@ -20,11 +20,19 @@ class _RegisterState extends State<Register> {
   final mobileController = TextEditingController();
   final mailidController = TextEditingController();
   final GlobalKey<State> _keyLoader = GlobalKey<State>();
-  String selectedItem = '+44 UK';
+  String selectedItem = '+91 India';
   List<String> items = ['+44 UK', '+91 India'];
   bool isLoading = true;
 
   final passwordController = TextEditingController();
+  final reTypePasswordController = TextEditingController();
+    Map<String, dynamic> errorMessage = {
+      "name" : '',
+      "email" : '',
+      "phone" : '',
+      "password" : '',
+      "retype_password" : '',
+    };
 
   Future<void> RegisterUser(BuildContext context, WidgetRef ref) async {
     isLoading = true;
@@ -32,8 +40,10 @@ class _RegisterState extends State<Register> {
     final String name = nameController.text;
     final String mobile_no = mobileController.text;
     final String email = mailidController.text;
-
+    final String retype_password =reTypePasswordController.text;
     final String password = passwordController.text;
+    final countryCode = selectedItem == '+91 India' ? '+91' : '+44';
+
     final headers = {
       'Content-Type': 'application/json',
     };
@@ -43,9 +53,9 @@ class _RegisterState extends State<Register> {
     final formData = {
       'name': name,
       'email': email,
-      'phone': '' + mobile_no,
+      'phone': countryCode + mobile_no,
       'password': password,
-      'retype_password': password,
+      'retype_password': retype_password,
     };
 
     String jsonData = json.encode(formData);
@@ -76,17 +86,21 @@ class _RegisterState extends State<Register> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(responsebody['message']),
-            backgroundColor:
-                Colors.green.shade400, // Change the background color here
-
+            backgroundColor:  Colors.green.shade400, // Change the background color here
             duration: Duration(seconds: 3),
           ),
-        );
+        ); 
       } else {
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
         isLoading = false;
         final dynamic responseBody = json.decode(response.body);
         final String errorText = responseBody['error_text'] ?? '';
+        setState(() {
+          if(responseBody['error_description'] != null){
+          errorMessage = responseBody['error_description'];
+          }
+        });
+        print(responseBody);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorText),
@@ -98,7 +112,7 @@ class _RegisterState extends State<Register> {
         );
       }
     } catch (error) {
-      Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
+      // Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
       isLoading = false;
       print("Error on Catch Block");
       print('Error: $error');
@@ -159,15 +173,7 @@ class _RegisterState extends State<Register> {
                   color: Colors.black87),
               textAlign: TextAlign.center,
             ),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Colors.black), // Set the back arrow color to black
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          // backgroundColor: Color(0xFF6a9739),
+          ),  
         ),
         body: Stack(children: [
           Container(
@@ -196,12 +202,14 @@ class _RegisterState extends State<Register> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(20)),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         MyInput(
                             controller: nameController,
                             hintText: "Name",
                             obscureText: false,
                             prefixicon: Icon(Icons.person_sharp)),
+                            errorStrip(errorMessage?['name']),
                         SizedBox(
                           height:
                               20, // Add more height here for additional space
@@ -235,7 +243,8 @@ class _RegisterState extends State<Register> {
                             controller: mobileController,
                             hintText: "Phone Number",
                             obscureText: false,
-                            prefixicon: Icon(Icons.phone_android)),
+                            prefixicon: Icon(Icons.phone_android)), 
+                            errorStrip(errorMessage?['phone']),
                         SizedBox(
                           height:
                               20, // Add more height here for additional space
@@ -245,6 +254,7 @@ class _RegisterState extends State<Register> {
                             hintText: "Email",
                             obscureText: false,
                             prefixicon: Icon(Icons.mail)),
+                            errorStrip(errorMessage?['email']),
                         SizedBox(
                           height:
                               20, // Add more height here for additional space
@@ -253,32 +263,45 @@ class _RegisterState extends State<Register> {
                             controller: passwordController,
                             hintText: "Password",
                             obscureText: true,
+                            prefixicon: Icon(Icons.lock)), 
+                            errorStrip(errorMessage?['password']),
+                        SizedBox(
+                          height:
+                              20, // Add more height here for additional space
+                        ),
+                        MyInput(
+                            controller: reTypePasswordController,
+                            hintText: "Confirm Password",
+                            obscureText: true,
                             prefixicon: Icon(Icons.lock)),
+                            errorStrip(errorMessage?['retype_password']),
                         SizedBox(
                           height:
                               20, // Add more height here for additional space
                         ),
                         Consumer(builder: (context, ref, child) {
-                          return ElevatedButton(
-                            style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all<Size?>(
-                                  const Size(250.0, 55.0)),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  const Color.fromRGBO(246, 46, 108, 1)),
-                              foregroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.white),
-                            ),
-                            onPressed: () {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(builder: (context) => OTPScreen()),
-                              // );
-                              RegisterUser(context, ref);
-                            },
-                            child: const Text(
-                              'SIGN UP',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900, fontSize: 16),
+                          return Center(
+                            child: ElevatedButton(
+                              style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all<Size?>(
+                                    const Size(250.0, 55.0)),
+                                backgroundColor: MaterialStateProperty.all<Color>(
+                                    const Color.fromRGBO(246, 46, 108, 1)),
+                                foregroundColor: MaterialStateProperty.all<Color>(
+                                    Colors.white),
+                              ),
+                              onPressed: () {
+                                // Navigator.push(
+                                //   context,
+                                //   MaterialPageRoute(builder: (context) => OTPScreen()),
+                                // );
+                                RegisterUser(context, ref);
+                              },
+                              child: const Text(
+                                'SIGN UP',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w900, fontSize: 16),
+                              ),
                             ),
                           );
                         }),
@@ -302,5 +325,12 @@ class _RegisterState extends State<Register> {
             ),
           ),
         ]));
+  }
+
+  Widget errorStrip(type) {
+    if(type != null){
+      return type.isNotEmpty ? Padding(padding: EdgeInsets.only(left: 10), child: Text((type).toString(), style: TextStyle(color: Colors.red.shade700, fontSize: 10),)) : SizedBox();
+    }
+    return SizedBox();
   }
 }

@@ -2,7 +2,6 @@ import 'package:datingapp/pages/components/my_input.dart';
 import 'package:datingapp/pages/home.dart';
 import 'package:datingapp/pages/pages/account.dart';
 import 'package:datingapp/pages/pages/dashboard.dart';
-import 'package:datingapp/pages/pages/majorissues.dart';
 import 'package:datingapp/pages/pages/profile.dart';
 import 'package:datingapp/pages/pages/profile/CreateProfile.dart';
 import 'package:datingapp/pages/pages/search.dart';
@@ -27,11 +26,10 @@ class Login extends StatelessWidget {
   bool isLoading = true;
 
   Future<void> loginUser(BuildContext context, WidgetRef ref) async {
-    
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => CreateProfile()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => CreateProfile()),
+        // );
     isLoading = true;
     showLoader(context);
     final String email = emailController.text;
@@ -147,12 +145,6 @@ class Login extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.black), // Set the back arrow color to black
-          onPressed: () {},
-        ),
-        // backgroundColor: Color(0xFF6a9739),
       ),
       body: Container(
         height: size.height,

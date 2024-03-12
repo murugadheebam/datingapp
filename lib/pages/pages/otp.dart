@@ -109,9 +109,15 @@ class _OTPScreenState extends State<OTPScreen> {
                 builder: (context) => Search()),
             (Route<dynamic> route) => false);
         final successMessage = widget.type == "login" ? "You are Logedin" : "Successfully Registered" ;
+        print(successMessage);
+        if( widget.type == "login"){  
+          final body = jsonDecode(response.body);
+         
+        prefs.setString('token', body['token']);
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(successMessage),
+            content: Text(response.body),
             backgroundColor:
                 Colors.green.shade400,
             duration: Duration(seconds: 3),

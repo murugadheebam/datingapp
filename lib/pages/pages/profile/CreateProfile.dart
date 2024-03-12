@@ -1,11 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:datingapp/pages/components/dateInput.dart';
 import 'package:datingapp/pages/components/inputBox2.dart';
 import 'package:datingapp/pages/components/my_input.dart';
+import 'package:datingapp/pages/constants.dart';
 import 'package:datingapp/pages/home.dart';
 import 'package:datingapp/pages/login.dart';
+import 'package:datingapp/pages/services/getLocalData.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:datingapp/pages/pages/notifications.dart';
-import 'package:flutter/widgets.dart'; // Replace with your actual package name
+import 'package:flutter/widgets.dart';
+import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
+
+final dio = Dio();
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({Key? key}) : super(key: key);
@@ -15,13 +26,224 @@ class CreateProfile extends StatefulWidget {
 }
 
 class CreateProfileState extends State<CreateProfile> {
+  final List<DropDownValueModel> occupationList = [];
+  final List<DropDownValueModel> ethnicityList = [];
+  final List<DropDownValueModel> intrestList = [];
+
   final issuesController = TextEditingController();
 
   final heightController = TextEditingController();
   final weightController = TextEditingController();
-  final ethnicityController = TextEditingController();
   final dobController = TextEditingController();
-  final genderController = TextEditingController();
+  late SingleValueDropDownController ethnicityController;
+  late SingleValueDropDownController occupationController;
+  late SingleValueDropDownController genderController;
+  late MultiValueDropDownController intrestsController;
+  List<File?> selectedImages = List.generate(6, (_) => null);
+  List intrestListvalue = [];
+
+  get http => null;
+
+  String userToken = "";
+
+  @override
+  void initState() {
+    ethnicityController = SingleValueDropDownController();
+    occupationController = SingleValueDropDownController();
+    genderController = SingleValueDropDownController();
+    intrestsController = MultiValueDropDownController();
+    getUser();
+    getUserToken();
+    getOccupation();
+    getEthnicity();
+    getIntrest();
+    super.initState();
+  }
+
+  getUser() async {
+    Map<String, dynamic> userData = await getUserDataFromLocalStorage();
+    print(userData);
+  }
+
+  Future getProfile() async {
+    final url = ApiConstants.baseUrl + '/profile';
+    final _headers = {
+      "Authorization": userToken,
+    };
+    try {
+      final response = await dio.get(
+        url,
+        options: Options(headers: _headers),
+      );
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  getUserToken() async {
+    String token = await getToken();
+    setState(() {
+      userToken = "Bearer " + token;
+    });
+  }
+
+  Future<List> getIntrest() async {
+    final queryParameters = {
+      "jsonrpc": "2.0",
+      "method": "getMasterchainInfo",
+      "params": [],
+      "id": "getblock.io"
+    };
+    final url = 'https://commitment.loveyourselfblog.in/api/v1/interest/list';
+    try {
+      final response = await dio.request(
+        url,
+        data: queryParameters,
+        options: Options(method: 'GET'),
+      );
+      List<dynamic> items = response?.data['data'];
+      updateDropDownList(items, intrestList);
+      print("profile intrest api1");
+      print(items);
+      return items;
+    } catch (e) {
+      // print("profile api error");
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List> getOccupation() async {
+    final queryParameters = {
+      "jsonrpc": "2.0",
+      "method": "getMasterchainInfo",
+      "params": [],
+      "id": "getblock.io"
+    };
+    final url = 'https://commitment.loveyourselfblog.in/api/v1/occupation/list';
+    try {
+      final response = await dio.request(
+        url,
+        data: queryParameters,
+        options: Options(method: 'GET'),
+      );
+      List<dynamic> items = response?.data['data'];
+      updateDropDownList(items, occupationList);
+      print("profile api1");
+      return items;
+    } catch (e) {
+      print("profile api error");
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List> getEthnicity() async {
+    final queryParameters = {
+      "jsonrpc": "2.0",
+      "method": "getMasterchainInfo",
+      "params": [],
+      "id": "getblock.io"
+    };
+    final url = 'https://commitment.loveyourselfblog.in/api/v1/ethinicty/list';
+    try {
+      final response = await dio.request(
+        url,
+        data: queryParameters,
+        options: Options(method: 'GET'),
+      );
+      List<dynamic> items = response?.data['data'];
+      updateDropDownList(items, ethnicityList);
+      print("profile api1");
+      return items;
+    } catch (e) {
+      print("profile api error");
+      print(e);
+      return [];
+    }
+  }
+
+  void updateDropDownList(List<dynamic> items, type) {
+    type.clear();
+    for (var item in items) {
+      print(item['id']);
+      type.add(DropDownValueModel(name: item['name'], value: item['id']));
+    }
+  }
+
+  Future<void> getImage(index) async {
+    final returnimg =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    print(returnimg);
+    setState(() {
+      selectedImages[index] = File(returnimg!.path);
+    });
+
+    if (returnimg != null) {
+      final url =
+          'https://commitment.loveyourselfblog.in/api/v1/profile/image/upload';
+      String fileName = returnimg.path.split('/').last;
+      FormData formData = FormData.fromMap({
+        "image": await MultipartFile.fromFile(
+          returnimg.path,
+          filename: fileName,
+        ),
+        "type": "additional",
+      });
+      try {
+        Response response = await dio.post(
+          url,
+          data: formData,
+          options: Options(
+            headers: {
+              'Authorization': userToken,
+            },
+          ),
+        );
+        print(response.data);
+      } catch (error) {
+        print("upload Error");
+        print(error.toString());
+      }
+    }
+  }
+
+  Future _formSubmit() async {
+    // print(intrestsController?.dropDownValueList);
+    List tempIntrest = [];
+    for (var item in intrestsController?.dropDownValueList ?? []) {
+      tempIntrest.add(item?.value!);
+    }
+    final obj = {
+      "height": heightController.text ?? '',
+      "weight": weightController.text ?? '',
+      "occupation_id": occupationController?.dropDownValue!.value ?? '',
+      "ethinicity_id": ethnicityController?.dropDownValue!.value ?? '',
+      "interests": tempIntrest ?? [],
+      // "gender" : genderController.dropDownValue!.value ?? ''
+    };
+    final _headers = {
+      "Authorization": userToken,
+    };
+    final formData = FormData.fromMap(obj);
+  for (var element in formData.fields) {
+      print('${element.key}: ${element.value}');
+
+  }
+    print(formData);
+    try {
+    final response = await dio.post(ApiConstants.baseUrl + '/profile',
+        data: formData, options: Options(headers: _headers));
+    print(response);
+    } catch (e) {
+      print(e); 
+    }
+
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => Home()),
+    // ); 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +264,11 @@ class CreateProfileState extends State<CreateProfile> {
               textAlign: TextAlign.center,
             ),
           ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back,
-                color: Colors.black), // Set the back arrow color to black
-            onPressed: () {},
-          ),
+          // leading: IconButton(
+          //   icon: Icon(Icons.arrow_back,
+          //       color: Colors.black), // Set the back arrow color to black
+          //   onPressed: () {},
+          // ),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.notifications, color: Colors.black),
@@ -122,7 +344,7 @@ class CreateProfileState extends State<CreateProfile> {
                           ),
                           iconSize: 15, // Adjust icon size as needed
                           onPressed: () {
-                            // Add your edit functionality here
+                            getIntrest();
                           },
                         ),
                       )
@@ -165,192 +387,401 @@ class CreateProfileState extends State<CreateProfile> {
                               obscureText: false,
                             ),
                             SizedBox(height: 8),
+                            Text("Occupation"),
+                            SizedBox(height: 5),
+                            DropDownTextField(
+                              clearOption: false,
+                              enableSearch: false,
+                              dropdownColor: Colors.white,
+                              controller: occupationController,
+                              textFieldDecoration: InputDecoration(
+                                  hintText: 'Enter Occupation',
+                                  hintStyle: const TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 16),
+                                  isDense: true,
+                                  labelStyle: TextStyle(fontSize: 12),
+                                  contentPadding: EdgeInsets.only(left: 20),
+                                  errorBorder: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade200),
+                                  ),
+                                  focusedBorder: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  )),
+                              dropDownList: occupationList,
+                              
+                            ),
+                            SizedBox(height: 8),
+                            Text("Intrests"),
+                            DropDownTextField.multiSelection(
+                              controller: intrestsController,
+                              textFieldDecoration: InputDecoration(
+                                  hintText: 'Choose Intrest',
+                                  hintStyle: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 16),
+                                  isDense: true,
+                                  labelStyle: const TextStyle(fontSize: 12),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 20),
+                                  errorBorder: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade200),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  )),
+                              // displayCompleteItem: true,
+                              submitButtonColor: Colors.pink,
+                              submitButtonTextStyle:
+                                  TextStyle(color: Colors.white),
+                              // initialValue: const ["Guitarist"],
+                              dropDownList: const [
+                                DropDownValueModel(
+                                    name: 'Guitarist',
+                                    value:
+                                        'a0f2f9bf-240c-4cde-aeb9-9ae9ede4f2bd'),
+                                DropDownValueModel(
+                                    name: 'Reading',
+                                    value:
+                                        'b8391681-a071-4673-ac49-b619a26ac7ad'),
+                              ],
+                              onChanged: (data) {
+                                for (var value in data) {
+                                    print(value?.value);
+                                }
+                              },
+                            ),
+                            SizedBox(height: 8),
                             Text("Ethnicity"),
                             SizedBox(height: 5),
-                            InputBox2(
+                            DropDownTextField(
+                              clearOption: false,
+                              enableSearch: false,
+                              dropdownColor: Colors.white,
                               controller: ethnicityController,
-                              hintText: "Enter Ethnicity",
-                              obscureText: false,
+                              textFieldDecoration: InputDecoration(
+                                  hintText: 'Enter Ethnicity',
+                                  hintStyle: TextStyle(
+                                      fontWeight: FontWeight.w300,
+                                      fontSize: 16),
+                                  isDense: true,
+                                  labelStyle: const TextStyle(fontSize: 12),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 20),
+                                  errorBorder: const OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide: BorderSide(color: Colors.red),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade200),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(100)),
+                                    borderSide: BorderSide(color: Colors.grey),
+                                  )),
+                              dropDownList: ethnicityList,
+                              onChanged: (val) {
+                                try {
+                                  // print(curentObj);
+                                } catch (e) {
+                                  print(e);
+                                }
+                              },
                             ),
                             SizedBox(height: 8),
                             Text("DOB"),
                             SizedBox(height: 5),
-                            InputBox2(
+                            DateInput(
                               controller: dobController,
                               hintText: "DD/MM/YYYY",
-                              obscureText: false,
                             ),
                             SizedBox(height: 8),
                             Text("Gender"),
                             SizedBox(height: 5),
-                            InputBox2(
-                              controller: genderController,
-                              hintText: "Male",
-                              obscureText: false,
+                            DropdownInputBox(
+                              ethnicityController: genderController,
+                              dropdownList: const [
+                                DropDownValueModel(name: 'Male', value: 'male'),
+                                DropDownValueModel(
+                                    name: 'Female', value: 'female'),
+                                DropDownValueModel(
+                                    name: 'other', value: 'other')
+                              ],
                             ),
                           ]),
                     ),
                   ),
                   Card(
-                      elevation: 0,
-                      child: Expanded(
-                        child: Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    elevation: 0,
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            "Additional Pics",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Row(
                             children: [
-                              const Text(
-                                "Additional Pics",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    getImage(0);
+                                  },
+                                  child: Container(
+                                    height: 100,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        selectedImages[0] != null
+                                            ? Image.file(
+                                                selectedImages[0]!,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/profile_placeholder.jpg',
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                        Icon(
+                                          selectedImages[0] != null
+                                              ? Icons.edit
+                                              : Icons.add_circle,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ), // Plus button overlay
+                                      ],
+                                    ),
+                                  ),
                                 ),
                               ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    getImage(1);
+                                  },
+                                  child: Container(
+                                    height: 100,
                                     child: Stack(
                                       alignment: Alignment.center,
                                       children: [
-                                        SizedBox(
-                                          height: 100,
-                                          child: Image.asset(
-                                            'assets/images/profile_placeholder.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned.fill(
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            size: 40,
-                                            color: Colors.white,
-                                          ), // Plus button overlay
-                                        ),
+                                        selectedImages[1] != null
+                                            ? Image.file(
+                                                selectedImages[1]!,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/profile_placeholder.jpg',
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                        Icon(
+                                          selectedImages[1] != null
+                                              ? Icons.edit
+                                              : Icons.add_circle,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ), // Plus button overlay
                                       ],
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 100,
-                                          child: Image.asset(
-                                            'assets/images/profile_placeholder.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned.fill(
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            size: 40,
-                                            color: Colors.white,
-                                          ), // Plus button overlay
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 100,
-                                          child: Image.asset(
-                                            'assets/images/profile_placeholder.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned.fill(
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            size: 40,
-                                            color: Colors.white,
-                                          ), // Plus button overlay
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                              SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  Expanded(
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    getImage(2);
+                                  },
+                                  child: Container(
+                                    height: 100,
                                     child: Stack(
                                       alignment: Alignment.center,
                                       children: [
-                                        SizedBox(
-                                          height: 100,
-                                          child: Image.asset(
-                                            'assets/images/profile_placeholder.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned.fill(
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            size: 40,
-                                            color: Colors.white,
-                                          ), // Plus button overlay
-                                        ),
+                                        selectedImages[2] != null
+                                            ? Image.file(
+                                                selectedImages[2]!,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/profile_placeholder.jpg',
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                        Icon(
+                                          selectedImages[2] != null
+                                              ? Icons.edit
+                                              : Icons.add_circle,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ), // Plus button overlay
                                       ],
                                     ),
                                   ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 100,
-                                          child: Image.asset(
-                                            'assets/images/profile_placeholder.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned.fill(
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            size: 40,
-                                            color: Colors.white,
-                                          ), // Plus button overlay
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: 100,
-                                          child: Image.asset(
-                                            'assets/images/profile_placeholder.jpg',
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        Positioned.fill(
-                                          child: Icon(
-                                            Icons.add_circle,
-                                            size: 40,
-                                            color: Colors.white,
-                                          ), // Plus button overlay
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
+                                ),
+                              ),
+                              // Add more Expanded widgets for other images
                             ],
                           ),
-                        ),
-                      )),
+                          SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    getImage(3);
+                                  },
+                                  child: Container(
+                                    height: 100,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        selectedImages[3] != null
+                                            ? Image.file(
+                                                selectedImages[3]!,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/profile_placeholder.jpg',
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                        Icon(
+                                          selectedImages[3] != null
+                                              ? Icons.edit
+                                              : Icons.add_circle,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ), // Plus button overlay
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    getImage(4);
+                                  },
+                                  child: Container(
+                                    height: 100,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        selectedImages[4] != null
+                                            ? Image.file(
+                                                selectedImages[4]!,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/profile_placeholder.jpg',
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                        Icon(
+                                          selectedImages[4] != null
+                                              ? Icons.edit
+                                              : Icons.add_circle,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ), // Plus button overlay
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    getImage(5);
+                                  },
+                                  child: Container(
+                                    height: 100,
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        selectedImages[5] != null
+                                            ? Image.file(
+                                                selectedImages[5]!,
+                                                fit: BoxFit.cover,
+                                                height: 100,
+                                                width: 100,
+                                              )
+                                            : Image.asset(
+                                                'assets/images/profile_placeholder.jpg',
+                                                fit: BoxFit.cover,
+                                                width: double.infinity,
+                                                height: double.infinity,
+                                              ),
+                                        Icon(
+                                          selectedImages[5] != null
+                                              ? Icons.edit
+                                              : Icons.add_circle,
+                                          size: 30,
+                                          color: Colors.white,
+                                        ), // Plus button overlay
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Add more Expanded widgets for other images
+                            ],
+                          ),
+                          // Add more Rows for additional images
+                        ],
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     style: ButtonStyle(
@@ -368,10 +799,7 @@ class CreateProfileState extends State<CreateProfile> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
+                      _formSubmit();
                     },
                     child: const Text(
                       'Submit',
@@ -382,6 +810,53 @@ class CreateProfileState extends State<CreateProfile> {
                 ]),
           ),
         ));
+  }
+}
+
+class DropdownInputBox extends StatelessWidget {
+  const DropdownInputBox({
+    super.key,
+    required this.ethnicityController,
+    required this.dropdownList,
+  });
+
+  final SingleValueDropDownController ethnicityController;
+  final List<DropDownValueModel> dropdownList;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropDownTextField(
+      clearOption: false,
+      enableSearch: false,
+      dropdownColor: Colors.white,
+      controller: ethnicityController,
+      textFieldDecoration: InputDecoration(
+          hintText: 'Gender',
+          hintStyle: TextStyle(fontWeight: FontWeight.w300, fontSize: 16),
+          isDense: true,
+          labelStyle: const TextStyle(fontSize: 12),
+          contentPadding: const EdgeInsets.only(left: 20),
+          errorBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            borderSide: BorderSide(color: Colors.red),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            borderSide: BorderSide(color: Colors.grey.shade200),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(100)),
+            borderSide: BorderSide(color: Colors.grey),
+          )),
+      dropDownList: dropdownList,
+      onChanged: (val) {
+        try {
+          // print(curentObj);
+        } catch (e) {
+          print(e);
+        }
+      },
+    );
   }
 }
 

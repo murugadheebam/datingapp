@@ -73,6 +73,7 @@ class Login extends StatelessWidget {
         Navigator.of(_keyLoader.currentContext!, rootNavigator: true).pop();
         isLoading = false;
         final ErrorResponse = json.decode(response.body);
+        print(ErrorResponse);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(ErrorResponse['error_text']),

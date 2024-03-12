@@ -10,3 +10,7 @@ class WooCommerceAPIHandler {
           consumerSecret: 'cs_bc506ee8513fbaed38ca161bcb7d601e1189935a',
         );
 }
+
+class ApiConstants { 
+  static String baseUrl = 'https://commitment.loveyourselfblog.in/api/v1';  
+}

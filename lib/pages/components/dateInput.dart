@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class InputBox2 extends StatefulWidget {
+class DateInput extends StatefulWidget {
 
   final controller;
   final String hintText;
-  final bool obscureText;
-  final prefixicon;
-  const InputBox2(
+  final bool? obscureText;
+  final dynamic? prefixicon;
+  const DateInput(
       {Key? key,
       required this.controller,
       required this.hintText,
-      required this.obscureText, this.prefixicon})
+      this.obscureText, this.prefixicon})
       : super(key: key);
 
   @override
-  State<InputBox2> createState() => _InputBox2State();
+  State<DateInput> createState() => _DateInputState();
 }
 
-class _InputBox2State extends State<InputBox2> {
+class _DateInputState extends State<DateInput> {
     bool _isObscure = true;
    void _toggleObscured() {
     setState(() {
@@ -30,16 +31,15 @@ class _InputBox2State extends State<InputBox2> {
     return Container(
         child: TextField(
       controller: widget.controller,
-      obscureText:widget.obscureText ? _isObscure : false,
-      
+      readOnly: true,
+      onTap: () async{
+        DateTime? pickDate = await showDatePicker(context: context,initialDate: DateTime(1980), firstDate: DateTime(1980), lastDate: DateTime(2015), initialEntryMode: DatePickerEntryMode.calendarOnly,); 
+        if(pickDate != null){
+          widget.controller.text = DateFormat('DD/MM/yyyy').format(pickDate); 
+        }
+      },
       decoration: InputDecoration(
-        prefixIcon: widget.prefixicon,
-        suffixIcon: widget.obscureText
-              ? IconButton(
-                  onPressed: () {_toggleObscured(); },
-                  icon: _isObscure ? Icon(Icons.visibility_off): Icon(Icons.visibility) ,
-                )
-              : null,
+        prefixIcon: Icon(Icons.date_range),
          isDense: true,
          contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
           enabledBorder: OutlineInputBorder(
@@ -51,8 +51,6 @@ class _InputBox2State extends State<InputBox2> {
           focusedBorder:
               OutlineInputBorder(
             borderRadius: BorderRadius.circular(100),borderSide: BorderSide(color: Colors.grey)),
-          fillColor: Colors.white,
-          filled: true,
           hintText: widget.hintText,
           hintStyle: TextStyle(
             fontWeight: FontWeight.w300
